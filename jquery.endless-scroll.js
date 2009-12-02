@@ -1,5 +1,7 @@
 /**
- * Endless Scroll plugin for jQuery v1.2
+ * Endless Scroll plugin for jQuery
+ *
+ * v1.3
  *
  * Copyright (c) 2008 Fred Wu
  *
@@ -36,6 +38,7 @@
  *                                the event triggered during the current page session)
  * resetCounter  function         resets the fire sequence counter if the function returns true, this function
  *                                could also perform hook actions since it is applied at the start of the event
+ * ceaseFire     function         stops the event (no more endless scrolling) if the function returns true
  *
  * Usage tips:
  *
@@ -55,66 +58,76 @@
 			data: "",
 			insertAfter: "div:last",
 			resetCounter: function(){ return false; },
-			callback: function(fs){ return true; }
+			callback: function(){ return true; },
+			ceaseFire: function(){ return false; }
 		};
 		
 		var options = $.extend(defaults, options);
 		
-		var fired = false;
+		var firing       = true;
+		var fired        = false;
 		var fireSequence = 0;
 		
-		$(window).scroll(function(){
-			if ($(document).height() - $(window).height() <= $(window).scrollTop() + options.bottomPixels)
-			{
-				if ((options.fireOnce == false || options.fireOnce == true && fired != true))
+		if(options.ceaseFire.apply(this) === true)
+		{
+			firing = false;
+		}
+		
+		if (firing === true)
+		{
+			$(window).scroll(function(){
+				if ($(document).height() - $(window).height() <= $(window).scrollTop() + options.bottomPixels)
 				{
-					if(options.resetCounter.apply(this) === true)
+					if ((options.fireOnce == false || (options.fireOnce == true && fired != true)))
 					{
-						fireSequence = 0;
-					}
-					
-					fired = true;
-					fireSequence++;
-					
-					$(options.insertAfter).after("<div id=\"endless_scroll_loader\">" + options.loader + "</div>");
-					
-					if (typeof options.data == 'function')
-					{
-						data = options.data.apply(this);
-					}
-					else
-					{
-						data = options.data;
-					}
-					
-					if (data !== false)
-					{
-						$("div#endless_scroll_loader").remove();
-						$(options.insertAfter).after("<div id=\"endless_scroll_data\">" + data + "</div>");
-						$("div#endless_scroll_data").hide().fadeIn();
-						$("div#endless_scroll_data").removeAttr("id");
-						
-						var args = new Array();
-						args[0] = fireSequence;
-						options.callback.apply(this, args);
-						
-						if (options.fireDelay !== false || options.fireDelay !== 0)
+						if(options.resetCounter.apply(this) === true)
 						{
-							// slight delay for preventing event firing twice
-							$(options.insertAfter).after("<div id=\"endless_scroll_marker\"></div>");
-							$("div#endless_scroll_marker").fadeTo(options.fireDelay, 1, function(){
-								$(this).remove();
-								fired = false;
-							});
+							fireSequence = 0;
+						}
+						
+						fired = true;
+						fireSequence++;
+
+						$(options.insertAfter).after("<div id=\"endless_scroll_loader\">" + options.loader + "</div>");
+
+						if (typeof options.data == 'function')
+						{
+							data = options.data.apply(this);
 						}
 						else
 						{
-							fired = false;
+							data = options.data;
+						}
+
+						if (data !== false)
+						{
+							$("div#endless_scroll_loader").remove();
+							$(options.insertAfter).after("<div id=\"endless_scroll_data\">" + data + "</div>");
+							$("div#endless_scroll_data").hide().fadeIn();
+							$("div#endless_scroll_data").removeAttr("id");
+
+							var args = new Array();
+							args[0] = fireSequence;
+							options.callback.apply(this, args);
+
+							if (options.fireDelay !== false || options.fireDelay !== 0)
+							{
+								// slight delay for preventing event firing twice
+								$("body").after("<div id=\"endless_scroll_marker\"></div>");
+								$("div#endless_scroll_marker").fadeTo(options.fireDelay, 1, function(){
+									$(this).remove();
+									fired = false;
+								});
+							}
+							else
+							{
+								fired = false;
+							}
 						}
 					}
 				}
-			}
-		});
+			});
+		}
 	};
 	
 })(jQuery);
