@@ -1,5 +1,5 @@
 /**
- * Endless Scroll plugin for jQuery v1.1
+ * Endless Scroll plugin for jQuery v1.2
  *
  * Copyright (c) 2008 Fred Wu
  *
@@ -9,15 +9,33 @@
  */
 
 /**
+ * Usage:
+ * 
+ * // using default options
+ * $(document).endlessScroll();
+ *
+ * // using some custom options
+ * $(document).endlessScroll({
+ *   fireOnce: false,
+ *   fireDelay: false,
+ *   loader: "<div class=\"loading\"><div>",
+ *   callback: function(){
+ *     alert("test");
+ *   }
+ * });
+ *
  * Configuration options:
  *
- * bottomPixels integer    the number of pixels from the bottom of the page that triggers the event
- * fireOnce     boolean    only fire once until the execution of the current event is completed
- * fireDelay    integer    delay the subsequent firing, in milliseconds. 0 or false to disable delay.
- * loader       string     HTML loader
- * data         string     plain HTML data
- * insertAfter  string     jQuery selector syntax: where to put the loader as well as the plain HTML data
- * callback     function   callback function, accepets one argument: fire sequence (the number of times the event triggered during the current page session)
+ * bottomPixels  integer          the number of pixels from the bottom of the page that triggers the event
+ * fireOnce      boolean          only fire once until the execution of the current event is completed
+ * fireDelay     integer          delay the subsequent firing, in milliseconds. 0 or false to disable delay.
+ * loader        string           the HTML to be displayed during loading
+ * data          string|function  plain HTML data, can be either a string or a function that returns a string
+ * insertAfter   string           jQuery selector syntax: where to put the loader as well as the plain HTML data
+ * callback      function         callback function, accepets one argument: fire sequence (the number of times 
+ *                                the event triggered during the current page session)
+ * resetCounter  function         resets the fire sequence counter if the function returns true, this function
+ *                                could also perform hook actions since it is applied at the start of the event
  *
  * Usage tips:
  *
@@ -36,6 +54,7 @@
 			loader: "<br />Loading...<br />",
 			data: "",
 			insertAfter: "div:last",
+			resetCounter: function(){ return false; },
 			callback: function(fs){ return true; }
 		};
 		
@@ -49,6 +68,11 @@
 			{
 				if ((options.fireOnce == false || options.fireOnce == true && fired != true))
 				{
+					if(options.resetCounter.apply(this) === true)
+					{
+						fireSequence = 0;
+					}
+					
 					fired = true;
 					fireSequence++;
 					
@@ -56,7 +80,7 @@
 					
 					if (typeof options.data == 'function')
 					{
-						data = options.data.apply();
+						data = options.data.apply(this);
 					}
 					else
 					{
