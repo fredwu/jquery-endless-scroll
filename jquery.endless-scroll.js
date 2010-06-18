@@ -1,7 +1,7 @@
 /**
  * Endless Scroll plugin for jQuery
  *
- * v1.3
+ * v1.4
  *
  * Copyright (c) 2008 Fred Wu
  *
@@ -68,15 +68,21 @@
 		var fired        = false;
 		var fireSequence = 0;
 		
-		if(options.ceaseFire.apply(this) === true)
+		if (options.ceaseFire.apply(this) === true)
 		{
 			firing = false;
 		}
 		
 		if (firing === true)
 		{
-			$(window).scroll(function(){
-				if ($(document).height() - $(window).height() <= $(window).scrollTop() + options.bottomPixels)
+			$(this).scroll(function(){
+				var inner_wrap = $(".endless_scroll_inner_wrap", this);
+				
+				if (inner_wrap.length == 0) {
+					$(this).wrapInner("<div class=\"endless_scroll_inner_wrap\" />");
+				}
+			  
+				if (inner_wrap.height() - $(this).height() <= $(this).scrollTop() + options.bottomPixels)
 				{
 					if ((options.fireOnce == false || (options.fireOnce == true && fired != true)))
 					{
