@@ -1,47 +1,80 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-    <title>Endless Scroll Demo (by Fred Wu)</title>
-    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+  <title>Endless Scroll Demo (by Fred Wu)</title>
+  <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 
-    <style type="text/css" media="screen">
-        * { margin: auto; }
-        body { margin: 20px 0; background: #cee; font-family: Helvetica, Arial, Verdana, 'Lucida Grande', sans-serif; }
-        h1, h3 { text-align: center; }
-        ul { text-align: center; list-style: none; }
-    </style>
+  <style type="text/css" media="screen">
+    * { margin: auto; }
+    body { margin: 20px 0; background: #cee; font-family: Helvetica, Arial, Verdana, 'Lucida Grande', sans-serif; }
+    h1, h3 { text-align: center; }
+    ul#list { width: 50px; height: 200px; overflow-y: scroll; }
+    ul#images { text-align: center; list-style: none; }
+  </style>
 
-    <script type="text/javascript" src="js/jquery.min.js"></script>
-    <script type="text/javascript" src="js/jquery.endless-scroll.js"></script>
-    <script type="text/javascript" charset="utf-8">
-        $(document).ready(function() {
-            $(document).endlessScroll({
-                bottomPixels: 500,
-                fireDelay: 10,
-                callback: function(p){
-                    var last_img = $("ul#list li:last");
-                    last_img.after(last_img.prev().prev().prev().prev().prev().prev().clone());
-                }
-            });
-        });
-    </script>
+  <script type="text/javascript" src="js/jquery.min.js"></script>
+  <script type="text/javascript" src="js/jquery.endless-scroll.js"></script>
+  <script type="text/javascript" charset="utf-8">
+    $(function() {
+      $('ul#list').endlessScroll({
+        bottomPixels: 500,
+        fireDelay: 10,
+        insertAfter: "ul#list li:last",
+        data: function(i) {
+          console.log(i)
+          return '<li>' + i + '</li>'
+        }
+      });
+      $(document).endlessScroll({
+        bottomPixels: 500,
+        fireDelay: 10,
+        callback: function(i) {
+          console.log(i)
+          var last_img = $("ul#images li:last");
+          last_img.after(last_img.prev().prev().prev().prev().prev().prev().clone());
+        }
+      });
+    });
+  </script>
 </head>
 
 <body>
-    <h1>Endless Scroll Demo</h1>
-    <h3>by Fred Wu</h3>
-    <br />
-    <ul id="list">
-        <li><img src="img/grass-blades.jpg" width="580" height="360" alt="Grass Blades" /></li>
-        <li><img src="img/stones.jpg" width="580" height="360" alt="Stones" /></li>
-        <li><img src="img/sea-mist.jpg" width="580" height="360" alt="Sea Mist" /></li>
-        <li><img src="img/pier.jpg" width="580" height="360" alt="Pier" /></li>
-        <li><img src="img/lotus.jpg" width="580" height="360" alt="Lotus" /></li>
-        <li><img src="img/mojave.jpg" width="580" height="360" alt="Mojave" /></li>
-        <li><img src="img/lightning.jpg" width="580" height="360" alt="Lightning" /></li>
-    </ul>
+  <h1>Endless Scroll Demo</h1>
+  <h3>by Fred Wu</h3>
+  <br />
+  <ul id="list">
+    <li>1</li>
+    <li>2</li>
+    <li>3</li>
+    <li>4</li>
+    <li>5</li>
+    <li>6</li>
+    <li>7</li>
+    <li>8</li>
+    <li>9</li>
+    <li>10</li>
+    <li>11</li>
+    <li>12</li>
+    <li>13</li>
+    <li>14</li>
+    <li>15</li>
+    <li>16</li>
+    <li>17</li>
+    <li>18</li>
+    <li>19</li>
+    <li>20</li>
+  </ul>
+  <br />
+  <ul id="images">
+    <li><img src="img/grass-blades.jpg" width="580" height="360" alt="Grass Blades" /></li>
+    <li><img src="img/stones.jpg" width="580" height="360" alt="Stones" /></li>
+    <li><img src="img/sea-mist.jpg" width="580" height="360" alt="Sea Mist" /></li>
+    <li><img src="img/pier.jpg" width="580" height="360" alt="Pier" /></li>
+    <li><img src="img/lotus.jpg" width="580" height="360" alt="Lotus" /></li>
+    <li><img src="img/mojave.jpg" width="580" height="360" alt="Mojave" /></li>
+    <li><img src="img/lightning.jpg" width="580" height="360" alt="Lightning" /></li>
+  </ul>
 </body>
 
 </html>

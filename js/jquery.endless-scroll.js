@@ -1,7 +1,7 @@
 /**
  * Endless Scroll plugin for jQuery
  *
- * v1.4.2
+ * v1.4.3
  *
  * Copyright (c) 2008 Fred Wu
  *
@@ -30,11 +30,13 @@
  *
  * bottomPixels  integer          the number of pixels from the bottom of the page that triggers the event
  * fireOnce      boolean          only fire once until the execution of the current event is completed
- * fireDelay     integer          delay the subsequent firing, in milliseconds. 0 or false to disable delay.
+ * fireDelay     integer          delay the subsequent firing, in milliseconds, 0 or false to disable delay
  * loader        string           the HTML to be displayed during loading
- * data          string|function  plain HTML data, can be either a string or a function that returns a string
+ * data          string|function  plain HTML data, can be either a string or a function that returns a string,
+ *                                when passed as a function it accepts one argument: fire sequence (the number
+ *                                of times the event triggered during the current page session)
  * insertAfter   string           jQuery selector syntax: where to put the loader as well as the plain HTML data
- * callback      function         callback function, accepets one argument: fire sequence (the number of times
+ * callback      function         callback function, accepts one argument: fire sequence (the number of times
  *                                the event triggered during the current page session)
  * resetCounter  function         resets the fire sequence counter if the function returns true, this function
  *                                could also perform hook actions since it is applied at the start of the event
@@ -97,7 +99,7 @@
 
           $(options.insertAfter).after("<div id=\"endless_scroll_loader\">" + options.loader + "</div>");
 
-          data = typeof options.data == 'function' ? options.data.apply(this) : options.data;
+          data = typeof options.data == 'function' ? options.data.apply(this, [fireSequence]) : options.data;
           if (data !== false)
           {
             $("div#endless_scroll_loader").remove();
@@ -105,9 +107,7 @@
             $("div#endless_scroll_data").hide().fadeIn();
             $("div#endless_scroll_data").removeAttr("id");
 
-            var args = new Array();
-            args[0] = fireSequence;
-            options.callback.apply(this, args);
+            options.callback.apply(this, [fireSequence]);
 
             if (options.fireDelay !== false || options.fireDelay !== 0)
             {
