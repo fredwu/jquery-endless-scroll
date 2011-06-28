@@ -18,9 +18,8 @@
   <script type="text/javascript" charset="utf-8">
     $(function() {
       $('ul#list').endlessScroll({
-        bottomPixels: 500,
-        fireDelay: 10,
-        insertAfter: "ul#list li:last",
+        fireOnce: false,
+        insertAfter: "ul#list div:last",
         data: function(i) {
           console.log(i)
           return '<li>' + i + '</li>'

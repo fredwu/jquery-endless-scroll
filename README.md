@@ -1,6 +1,6 @@
 # Endless Scroll
 
-If you don’t already know, [endless scroll](http://www.google.com/search?q=endless+scroll) (or infinite scrolling) is a popular technique among web 2.0 sites such as [Google Reader](http://reader.google.com/) and [Live Image Search](http://www.live.com/?scope=images), where instead of paging through items using the traditional pagination technique, the page just keeps loading with new items attached to the end.
+If you don't already know, [endless scroll](http://www.google.com/search?q=endless+scroll) (or infinite scrolling) is a popular technique among web 2.0 sites such as [Google Reader](http://reader.google.com/) and [Live Image Search](http://www.live.com/?scope=images), where instead of paging through items using the traditional pagination technique, the page just keeps loading with new items attached to the end.
 
 I have developed a jQuery plugin to easily achieve this.
 
@@ -16,7 +16,7 @@ There are a few options to customise the behaviour of this plugin:
 - _resetCounter_ (function) - resets the fire sequence counter if the function returns true, this function could also perform hook actions since it is applied at the start of the event
 - _ceaseFire_ (function) - stops the event (no more endless scrolling) if the function returns true
 
-In a typical scenario, you won’t be using the `data` option, but rather the `callback` option. You may use it to trigger an AJAX call and updates/inserts your page content.
+In a typical scenario, you won't be using the `data` option, but rather the `callback` option. You may use it to trigger an AJAX call and updates/inserts your page content.
 
 ## Usage
 
@@ -40,17 +40,21 @@ $(document).endlessScroll({
 
 ## Changelog
 
+v1.4.4 [2011-06-28]
+
+- The AJAX loader should be removed when there's no more results to load.
+
 v1.4.3 [2011-06-28]
 
 - The `data` option now accepts a fireSequence argument too.
 
 v1.4.2 [2011-01-08]
 
-- Fixed a bug where calling the script on $(document) would fail.
+- Fixed a bug where calling the script on `$(document)` would fail.
 
 v1.4.1 [2010-06-18]
 
-- Fixed a bug where the callback fires when the inner wrap hasn’t been created.
+- Fixed a bug where the callback fires when the inner wrap hasn't been created.
 
 v1.4 [2010-06-18]
 

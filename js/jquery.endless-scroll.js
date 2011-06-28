@@ -1,7 +1,7 @@
 /**
  * Endless Scroll plugin for jQuery
  *
- * v1.4.3
+ * v1.4.4
  *
  * Copyright (c) 2008 Fred Wu
  *
@@ -59,9 +59,9 @@
       loader: "<br />Loading...<br />",
       data: "",
       insertAfter: "div:last",
-      resetCounter: function(){ return false; },
-      callback: function(){ return true; },
-      ceaseFire: function(){ return false; }
+      resetCounter: function() { return false; },
+      callback: function() { return true; },
+      ceaseFire: function() { return false; }
     };
 
     var options = $.extend(defaults, options);
@@ -102,7 +102,6 @@
           data = typeof options.data == 'function' ? options.data.apply(this, [fireSequence]) : options.data;
           if (data !== false)
           {
-            $("div#endless_scroll_loader").remove();
             $(options.insertAfter).after("<div id=\"endless_scroll_data\">" + data + "</div>");
             $("div#endless_scroll_data").hide().fadeIn();
             $("div#endless_scroll_data").removeAttr("id");
@@ -113,7 +112,7 @@
             {
               // slight delay for preventing event firing twice
               $("body").after("<div id=\"endless_scroll_marker\"></div>");
-              $("div#endless_scroll_marker").fadeTo(options.fireDelay, 1, function(){
+              $("div#endless_scroll_marker").fadeTo(options.fireDelay, 1, function() {
                 $(this).remove();
                 fired = false;
               });
@@ -123,6 +122,8 @@
               fired = false;
             }
           }
+
+          $("div#endless_scroll_loader").remove();
         }
       });
     }
