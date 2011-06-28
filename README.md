@@ -36,7 +36,7 @@ $(document).endlessScroll({
 
 ## Demo
 
-[Click here for a simple demo](http://www.beyondcoding.com/demos/endless-scroll/).
+[Click here for a simple demo](http://fredwu.github.com/jquery-endless-scroll/).
 
 ## Changelog
 
