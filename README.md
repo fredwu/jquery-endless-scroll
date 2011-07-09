@@ -8,9 +8,9 @@ There are a few options to customise the behaviour of this plugin:
 
 <table>
   <tr>
-    <th>Option</th>
-    <th>Type</th>
-    <th>Description</th>
+    <td><strong>Option</strong></td>
+    <td><strong>Type</strong></td>
+    <td><strong>Description</strong></td>
   </tr>
   <tr>
     <td>bottomPixels</td>
