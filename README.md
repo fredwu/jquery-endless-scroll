@@ -6,15 +6,58 @@ If you don't already know, [endless scroll](http://www.google.com/search?q=endle
 
 There are a few options to customise the behaviour of this plugin:
 
-- _bottomPixels_ (integer)         the number of pixels from the bottom of the page that triggers the event
-- _fireOnce_     (boolean)         only fire once until the execution of the current event is completed
-- _fireDelay_    (integer)         delay the subsequent firing, in milliseconds, 0 or false to disable delay
-- _loader_       (string)          the HTML to be displayed during loading
-- _data_         (string|function) plain HTML data, can be either a string or a function that returns a string, when passed as a function it accepts one argument: fire sequence (the number of times the event triggered during the current page session)
-- _insertAfter_  (string)          jQuery selector syntax: where to put the loader as well as the plain HTML data
-- _callback_     (function)        callback function, accepts one argument: fire sequence (the number of times the event triggered during the current page session)
-- _resetCounter_ (function)        resets the fire sequence counter if the function returns true, this function could also perform hook actions since it is applied at the start of the event
-- _ceaseFire_    (function)        stops the event (no more endless scrolling) if the function returns true
+<table>
+  <tr>
+    <th>Option</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>bottomPixels</td>
+    <td>Integer</td>
+    <td>The number of pixels from the bottom of the page that triggers the event.</td>
+  </tr>
+  <tr>
+    <td>fireOnce</td>
+    <td>Boolean</td>
+    <td>Only fire once until the execution of the current event is completed.</td>
+  </tr>
+  <tr>
+    <td>fireDelay</td>
+    <td>Integer</td>
+    <td>Delays the subsequent firing, in milliseconds, 0 or false to disable delay.</td>
+  </tr>
+  <tr>
+    <td>loader</td>
+    <td>String</td>
+    <td>The HTML to be displayed during loading.</td>
+  </tr>
+  <tr>
+    <td>data</td>
+    <td>String or Function</td>
+    <td>Plain HTML data, can be either a string or a function that returns a string, when passed as a function it accepts one argument: fire sequence (the number of times the event triggered during the current page session).</td>
+  </tr>
+  <tr>
+    <td>insertAfter</td>
+    <td>String</td>
+    <td>jQuery selector syntax: where to put the loader as well as the plain HTML data.</td>
+  </tr>
+  <tr>
+    <td>callback</td>
+    <td>Function</td>
+    <td>Callback function, accepts one argument: _fire sequence_ (the number of times the event triggered during the current page session).</td>
+  </tr>
+  <tr>
+    <td>resetCounter</td>
+    <td>Function</td>
+    <td>Resets the fire sequence counter if the function returns true, this function could also perform hook actions since it is applied at the start of the event.</td>
+  </tr>
+  <tr>
+    <td>ceaseFire</td>
+    <td>Function</td>
+    <td>Stops the event (no more endless scrolling) if the function returns true.</td>
+  </tr>
+</table>
 
 In a typical scenario, you won't be using the `data` option, but rather the `callback` option. You may use it to trigger an AJAX call and updates/inserts your page content.
 
