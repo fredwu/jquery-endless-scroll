@@ -78,6 +78,11 @@
     if (firing === true)
     {
       $(this).scroll(function() {
+        if (options.ceaseFire.apply(this) === true)
+        {
+          firing = false;
+          return; // Scroll will still get called, but nothing will happen
+        }
         if (this == document) {
           var is_scrollable = $(document).height() - $(window).height() <= $(window).scrollTop() + options.bottomPixels;
         } else {
