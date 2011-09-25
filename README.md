@@ -83,6 +83,10 @@ $(document).endlessScroll({
 
 ## Changelog
 
+v1.4.5 [2011-09-25]
+
+- `ceaseFire` now works as expected during a `scroll` event.
+
 v1.4.4 [2011-06-28]
 
 - The AJAX loader should be removed when there's no more results to load.
