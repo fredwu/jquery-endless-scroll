@@ -50,7 +50,7 @@
 
 (function($){
 
-  $.fn.endlessScroll = function(options){
+  $.fn.endlessScroll = function(options) {
 
     var defaults = {
       bottomPixels: 50,
@@ -70,19 +70,17 @@
     var fired        = false;
     var fireSequence = 0;
 
-    if (options.ceaseFire.apply(this) === true)
-    {
+    if (options.ceaseFire.apply(this) === true) {
       firing = false;
     }
 
-    if (firing === true)
-    {
+    if (firing === true) {
       $(this).scroll(function() {
-        if (options.ceaseFire.apply(this) === true)
-        {
+        if (options.ceaseFire.apply(this) === true) {
           firing = false;
           return; // Scroll will still get called, but nothing will happen
         }
+
         if (this == document) {
           var is_scrollable = $(document).height() - $(window).height() <= $(window).scrollTop() + options.bottomPixels;
         } else {
@@ -95,8 +93,7 @@
             (inner_wrap.height() - $(this).height() <= $(this).scrollTop() + options.bottomPixels);
         }
 
-        if (is_scrollable && (options.fireOnce == false || (options.fireOnce == true && fired != true)))
-        {
+        if (is_scrollable && (options.fireOnce == false || (options.fireOnce == true && fired != true))) {
           if (options.resetCounter.apply(this) === true) fireSequence = 0;
 
           fired = true;
@@ -105,25 +102,23 @@
           $(options.insertAfter).after("<div id=\"endless_scroll_loader\">" + options.loader + "</div>");
 
           data = typeof options.data == 'function' ? options.data.apply(this, [fireSequence]) : options.data;
-          if (data !== false)
-          {
+
+          if (data !== false) {
             $(options.insertAfter).after("<div id=\"endless_scroll_data\">" + data + "</div>");
             $("div#endless_scroll_data").hide().fadeIn();
             $("div#endless_scroll_data").removeAttr("id");
 
             options.callback.apply(this, [fireSequence]);
 
-            if (options.fireDelay !== false || options.fireDelay !== 0)
-            {
-              // slight delay for preventing event firing twice
+            if (options.fireDelay !== false || options.fireDelay !== 0) {
               $("body").after("<div id=\"endless_scroll_marker\"></div>");
+              // slight delay for preventing event firing twice
               $("div#endless_scroll_marker").fadeTo(options.fireDelay, 1, function() {
                 $(this).remove();
                 fired = false;
               });
             }
-            else
-            {
+            else {
               fired = false;
             }
           }
