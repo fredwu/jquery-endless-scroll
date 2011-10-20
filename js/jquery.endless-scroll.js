@@ -87,7 +87,7 @@
           // calculates the actual height of the scrolling container
           var inner_wrap = $(".endless_scroll_inner_wrap", this);
           if (inner_wrap.length == 0) {
-            $(this).wrapInner("<div class=\"endless_scroll_inner_wrap\" />");
+            inner_wrap = $(this).wrapInner("<div class=\"endless_scroll_inner_wrap\" />").find(".endless_scroll_inner_wrap");
           }
           var is_scrollable = inner_wrap.length > 0 &&
             (inner_wrap.height() - $(this).height() <= $(this).scrollTop() + options.bottomPixels);
