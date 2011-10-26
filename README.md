@@ -83,6 +83,10 @@ $(document).endlessScroll({
 
 ## Changelog
 
+v1.4.6 [2011-10-26]
+
+- Fixed an issue with inner_wrap and the first scroll event.
+
 v1.4.5 [2011-09-25]
 
 - `ceaseFire` now works as expected during a `scroll` event.
