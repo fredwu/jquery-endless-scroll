@@ -83,6 +83,10 @@ $(document).endlessScroll({
 
 ## Changelog
 
+v1.4.7 [2011-11-08]
+
+- Compatibility fix for IE7 and IE8.
+
 v1.4.6 [2011-10-26]
 
 - Fixed an issue with inner_wrap and the first scroll event.
