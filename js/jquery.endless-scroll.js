@@ -81,7 +81,7 @@
           return; // Scroll will still get called, but nothing will happen
         }
 
-        if (this == document) {
+        if (this == document || this == window) {
           var is_scrollable = $(document).height() - $(window).height() <= $(window).scrollTop() + options.bottomPixels;
         } else {
           // calculates the actual height of the scrolling container
