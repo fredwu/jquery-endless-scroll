@@ -83,6 +83,10 @@ $(document).endlessScroll({
 
 ## Changelog
 
+v1.4.8 [2011-11-18]
+
+- Refactored default options merge to avert side effects.
+
 v1.4.7 [2011-11-08]
 
 - Compatibility fix for IE7 and IE8.
