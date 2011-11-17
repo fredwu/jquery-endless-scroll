@@ -64,7 +64,7 @@
       ceaseFire: function() { return false; }
     };
 
-    var options = $.extend(defaults, options);
+    var options = $.extend({}, defaults, options);
 
     var firing       = true;
     var fired        = false;
