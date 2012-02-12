@@ -53,26 +53,25 @@
   $.fn.endlessScroll = function(options) {
 
     var defaults = {
-      bottomPixels: 50,
-      fireOnce: true,
-      fireDelay: 150,
-      loader: "<br />Loading...<br />",
-      data: "",
-      insertAfter: "div:last",
-      resetCounter: function() { return false; },
-      callback: function() { return true; },
-      ceaseFire: function() { return false; }
+      bottomPixels  : 50,
+      fireOnce      : true,
+      fireDelay     : 150,
+      loader        : "<br />Loading...<br />",
+      data          : "",
+      insertAfter   : "div:last",
+      resetCounter  : function() { return false; },
+      callback      : function() { return true; },
+      ceaseFire     : function() { return false; }
     };
 
-    var options = $.extend({}, defaults, options);
+    var options       = $.extend({}, defaults, options),
+        firing        = true,
+        fired         = false,
+        fireSequence  = 0,
+        is_scrollable;
 
-    var firing       = true;
-    var fired        = false;
-    var fireSequence = 0;
-
-    if (options.ceaseFire.apply(this) === true) {
+    if (options.ceaseFire.apply(this) === true)
       firing = false;
-    }
 
     if (firing === true) {
       $(this).scroll(function() {
@@ -82,14 +81,13 @@
         }
 
         if (this == document || this == window) {
-          var is_scrollable = $(document).height() - $(window).height() <= $(window).scrollTop() + options.bottomPixels;
+          is_scrollable = $(document).height() - $(window).height() <= $(window).scrollTop() + options.bottomPixels;
         } else {
           // calculates the actual height of the scrolling container
           var inner_wrap = $(".endless_scroll_inner_wrap", this);
-          if (inner_wrap.length == 0) {
+          if (inner_wrap.length == 0)
             inner_wrap = $(this).wrapInner("<div class=\"endless_scroll_inner_wrap\" />").find(".endless_scroll_inner_wrap");
-          }
-          var is_scrollable = inner_wrap.length > 0 &&
+          is_scrollable = inner_wrap.length > 0 &&
             (inner_wrap.height() - $(this).height() <= $(this).scrollTop() + options.bottomPixels);
         }
 
@@ -105,25 +103,23 @@
 
           if (data !== false) {
             $(options.insertAfter).after("<div id=\"endless_scroll_data\">" + data + "</div>");
-            $("div#endless_scroll_data").hide().fadeIn();
-            $("div#endless_scroll_data").removeAttr("id");
+            $("#endless_scroll_data").hide().fadeIn(250, function() {$(this).removeAttr("id");});
 
             options.callback.apply(this, [fireSequence]);
 
             if (options.fireDelay !== false || options.fireDelay !== 0) {
               $("body").after("<div id=\"endless_scroll_marker\"></div>");
               // slight delay for preventing event firing twice
-              $("div#endless_scroll_marker").fadeTo(options.fireDelay, 1, function() {
+              $("#endless_scroll_marker").fadeTo(options.fireDelay, 1, function() {
                 $(this).remove();
                 fired = false;
               });
             }
-            else {
+            else
               fired = false;
-            }
           }
 
-          $("div#endless_scroll_loader").remove();
+          $("#endless_scroll_loader").remove();
         }
       });
     }
