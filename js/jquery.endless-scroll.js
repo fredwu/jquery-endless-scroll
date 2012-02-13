@@ -70,8 +70,9 @@
         fireSequence  = 0,
         is_scrollable;
 
-    if (options.ceaseFire.apply(this) === true)
+    if (options.ceaseFire.apply(this) === true) {
       firing = false;
+    }
 
     if (firing === true) {
       $(this).scroll(function() {
@@ -85,14 +86,17 @@
         } else {
           // calculates the actual height of the scrolling container
           var inner_wrap = $(".endless_scroll_inner_wrap", this);
-          if (inner_wrap.length == 0)
+          if (inner_wrap.length == 0) {
             inner_wrap = $(this).wrapInner("<div class=\"endless_scroll_inner_wrap\" />").find(".endless_scroll_inner_wrap");
+          }
           is_scrollable = inner_wrap.length > 0 &&
             (inner_wrap.height() - $(this).height() <= $(this).scrollTop() + options.bottomPixels);
         }
 
         if (is_scrollable && (options.fireOnce == false || (options.fireOnce == true && fired != true))) {
-          if (options.resetCounter.apply(this) === true) fireSequence = 0;
+          if (options.resetCounter.apply(this) === true) {
+            fireSequence = 0;
+          }
 
           fired = true;
           fireSequence++;
@@ -115,8 +119,9 @@
                 fired = false;
               });
             }
-            else
+            else {
               fired = false;
+            }
           }
 
           $("#endless_scroll_loader").remove();
