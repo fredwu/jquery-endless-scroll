@@ -55,7 +55,7 @@ There are a few options to customise the behaviour of this plugin:
   <tr>
     <td>ceaseFire</td>
     <td>Function</td>
-    <td>Stops the event (no more endless scrolling) if the function returns true.</td>
+    <td>Stops the event (no more endless scrolling) if the function returns true, accepts one argument: fire sequence.</td>
   </tr>
   <tr>
     <td>intervalFrequency</td>
@@ -87,6 +87,11 @@ $(window).endlessScroll({
 [Click here for a simple demo](http://fredwu.github.com/jquery-endless-scroll/).
 
 ## Changelog
+
+HEAD
+
+- Added `fireSequence` argument to `ceaseFire`.
+- Added a `ceaseFire` example to the demo page.
 
 v1.5.0 [2012-03-08]
 

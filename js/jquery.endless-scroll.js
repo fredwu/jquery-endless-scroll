@@ -40,7 +40,8 @@
  *                                    the event triggered during the current page session)
  * resetCounter      function         resets the fire sequence counter if the function returns true, this function
  *                                    could also perform hook actions since it is applied at the start of the event
- * ceaseFire         function         stops the event (no more endless scrolling) if the function returns true
+ * ceaseFire         function         stops the event (no more endless scrolling) if the function returns true,
+ *                                    accepts one argument: fire sequence
  * intervalFrequency integer          set the frequency of the scroll event checking, the larger the frequency number,
  *                                    the less memory it consumes - but also the less sensitive the event trigger becomes
  *
@@ -76,10 +77,6 @@
         inner_wrap   = $(".endless_scroll_inner_wrap", this),
         is_scrollable;
 
-    if (options.ceaseFire.apply(this) === true) {
-      firing = false;
-    }
-
     $(this).scroll(function() {
       didScroll = true;
       scrollTarget = this;
@@ -90,7 +87,7 @@
       if (didScroll && firing === true) {
         didScroll = false;
 
-        if (options.ceaseFire.apply(scrollTarget) === true) {
+        if (options.ceaseFire.apply(scrollTarget, [fireSequence]) === true) {
           firing = false;
           return; // Scroll will still get called, but nothing will happen
         }

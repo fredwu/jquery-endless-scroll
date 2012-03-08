@@ -8,7 +8,7 @@
   <style type="text/css" media="screen">
     * { margin: auto; }
     body { margin: 20px 0; background: #cee; font-family: Helvetica, Arial, Verdana, 'Lucida Grande', sans-serif; }
-    h1, h3 { text-align: center; }
+    h1, h3, p { text-align: center; }
     ul#list { width: 50px; height: 200px; overflow-y: scroll; }
     ul#images { text-align: center; list-style: none; }
   </style>
@@ -23,6 +23,11 @@
         data: function(i) {
           console.log(i)
           return '<li>' + i + '</li>'
+        },
+        ceaseFire: function(i) {
+          if (i >= 10) {
+            return true;
+          }
         },
         intervalFrequency: 5
       });
@@ -42,6 +47,8 @@
 <body>
   <h1>Endless Scroll Demo</h1>
   <h3>by Fred Wu</h3>
+  <br /><br />
+  <p>Stops after 10 calls.</p>
   <br />
   <ul id="list">
     <li>1</li>
@@ -65,6 +72,8 @@
     <li>19</li>
     <li>20</li>
   </ul>
+  <br /><br />
+  <p>Never stops.</p>
   <br />
   <ul id="images">
     <li><img src="img/grass-blades.jpg" width="580" height="360" alt="Grass Blades" /></li>
