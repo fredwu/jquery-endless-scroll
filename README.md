@@ -70,9 +70,9 @@ In a typical scenario, you won't be using the `data` option, but rather the `cal
 
 ``` js
 // using default options
-$(document).endlessScroll();
+$(window).endlessScroll();
 // using some custom options
-$(document).endlessScroll({
+$(window).endlessScroll({
   fireOnce: false,
   fireDelay: false,
   loader: "<div class="loading"><div>",
