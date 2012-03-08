@@ -11,6 +11,7 @@
     h1, h3, p { text-align: center; }
     ul#list { width: 50px; height: 200px; overflow-y: scroll; }
     ul#images { text-align: center; list-style: none; }
+    .endless_scroll_loader { position: fixed; top: 10px; right: 20px; }
   </style>
 
   <script type="text/javascript" src="js/jquery.min.js"></script>
@@ -31,6 +32,7 @@
         },
         intervalFrequency: 5
       });
+
       $(window).endlessScroll({
         bottomPixels: 500,
         fireDelay: 10,

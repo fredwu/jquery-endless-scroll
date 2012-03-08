@@ -82,6 +82,13 @@ $(window).endlessScroll({
 });
 ```
 
+### Custom Loader Styles
+
+You may customise the look and feel of the loader by changing:
+
+- The `endless_scroll_loader` class;
+- Or the `endless_scroll_loader_<scroller_dom_html_id>`.
+
 ## Demo
 
 [Click here for a simple demo](http://fredwu.github.com/jquery-endless-scroll/).
@@ -92,6 +99,7 @@ HEAD
 
 - Added `fireSequence` argument to `ceaseFire`.
 - Added a `ceaseFire` example to the demo page.
+- Fixed `loader`.
 
 v1.5.0 [2012-03-08]
 

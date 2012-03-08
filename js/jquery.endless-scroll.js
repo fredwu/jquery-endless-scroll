@@ -74,12 +74,14 @@
         fireSequence = 0,
         didScroll    = false,
         scrollTarget = this,
+        scrollId     = "",
         inner_wrap   = $(".endless_scroll_inner_wrap", this),
         is_scrollable;
 
     $(this).scroll(function() {
-      didScroll = true;
+      didScroll    = true;
       scrollTarget = this;
+      scrollId     = $(scrollTarget).attr("id")
     });
 
     // use setInterval to improve scrolling performance: http://ejohn.org/blog/learning-from-twitter/
@@ -110,7 +112,7 @@
           fired = true;
           fireSequence++;
 
-          $(options.insertAfter).after("<div id=\"endless_scroll_loader\">" + options.loader + "</div>");
+          $(options.insertAfter).after("<div class=\"endless_scroll_loader_" + scrollId + " endless_scroll_loader\">" + options.loader + "</div>");
 
           data = typeof options.data == 'function' ? options.data.apply(scrollTarget, [fireSequence]) : options.data;
 
@@ -133,7 +135,9 @@
             }
           }
 
-          $("#endless_scroll_loader").remove();
+          $(".endless_scroll_loader_" + scrollId).fadeOut(function() {
+            $(this).remove();
+          });
         }
       }
     }, options.intervalFrequency);
