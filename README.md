@@ -57,6 +57,11 @@ There are a few options to customise the behaviour of this plugin:
     <td>Function</td>
     <td>Stops the event (no more endless scrolling) if the function returns true.</td>
   </tr>
+  <tr>
+    <td>intervalFrequency</td>
+    <td>Integer</td>
+    <td>Set the frequency of the scroll event checking, the larger the frequency number, the less memory it consumes - but also the less sensitive the event trigger becomes.</td>
+  </tr>
 </table>
 
 In a typical scenario, you won't be using the `data` option, but rather the `callback` option. You may use it to trigger an AJAX call and updates/inserts your page content.
@@ -82,6 +87,11 @@ $(document).endlessScroll({
 [Click here for a simple demo](http://fredwu.github.com/jquery-endless-scroll/).
 
 ## Changelog
+
+v1.5.0 [2012-03-08]
+
+- Added `intervalFrequency` option.
+- Endless Scroll should now consume less memory in most situations.
 
 v1.4.8 [2011-11-18]
 
