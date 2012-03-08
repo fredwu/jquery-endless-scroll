@@ -95,7 +95,7 @@ You may customise the look and feel of the loader by changing:
 
 ## Changelog
 
-HEAD
+v1.5.1 [2012-03-08]
 
 - Added `fireSequence` argument to `ceaseFire`.
 - Added a `ceaseFire` example to the demo page.
