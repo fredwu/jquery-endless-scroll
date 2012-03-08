@@ -45,7 +45,7 @@ There are a few options to customise the behaviour of this plugin:
   <tr>
     <td>callback</td>
     <td>Function</td>
-    <td>Callback function, accepts one argument: _fire sequence_ (the number of times the event triggered during the current page session).</td>
+    <td>Callback function, accepts one argument: <em>fireSequence</em> (the number of times the event triggered during the current page session).</td>
   </tr>
   <tr>
     <td>resetCounter</td>
@@ -55,7 +55,7 @@ There are a few options to customise the behaviour of this plugin:
   <tr>
     <td>ceaseFire</td>
     <td>Function</td>
-    <td>Stops the event (no more endless scrolling) if the function returns true, accepts one argument: fire sequence.</td>
+    <td>Stops the event (no more endless scrolling) if the function returns true, accepts one argument: <em>fireSequence</em>.</td>
   </tr>
   <tr>
     <td>intervalFrequency</td>
