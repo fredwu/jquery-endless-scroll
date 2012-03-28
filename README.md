@@ -158,8 +158,15 @@ v1.0 [2009-01-15]
 
 - Initial release.
 
+## More jQuery Plugins
+
+Check out my other jQuery plugins:
+
+- [Inline Confirmation](https://github.com/fredwu/jquery-inline-confirmation) - One of the less obtrusive ways of implementing confirmation dialogues.
+- [Slideshow Lite](https://github.com/fredwu/jquery-slideshow-lite) - An extremely lightweight slideshow plugin for jQuery.
+
 ## License
 
-Copyright (c) 2008 Fred Wu
+Copyright (c) 2008-2012 Fred Wu
 
 Dual licensed under the [MIT](http://www.opensource.org/licenses/mit-license.php) and [GPL](http://www.gnu.org/licenses/gpl.html) licenses.
