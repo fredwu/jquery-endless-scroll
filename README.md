@@ -93,6 +93,10 @@ You may customise the look and feel of the loader by changing:
 
 [Click here for a simple demo](http://fredwu.github.com/jquery-endless-scroll/).
 
+## Browser Support
+
+All modern browsers (Firefox, Chrome, Safari, Opera, IE7+) should be supported. It Endless Scroll doesn't work on a particular browser, please open an issue.
+
 ## Changelog
 
 v1.5.1 [2012-03-08]
