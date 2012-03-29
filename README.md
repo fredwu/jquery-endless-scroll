@@ -75,7 +75,7 @@ $(window).endlessScroll();
 $(window).endlessScroll({
   fireOnce: false,
   fireDelay: false,
-  loader: "<div class="loading"><div>",
+  loader: '<div class="loading"><div>',
   callback: function(p){
     alert("test");
   }
