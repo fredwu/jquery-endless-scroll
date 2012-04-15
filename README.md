@@ -33,9 +33,9 @@ There are a few options to customise the behaviour of this plugin:
     <td>The HTML to be displayed during loading.</td>
   </tr>
   <tr>
-    <td>data</td>
+    <td>content</td>
     <td>String or Function</td>
-    <td>Plain HTML data, can be either a string or a function that returns a string, when passed as a function it accepts one argument: fire sequence (the number of times the event triggered during the current page session).</td>
+    <td>Plain HTML content to insert after each call, can be either a string or a function that returns a string, when passed as a function it accepts one argument: fire sequence (the number of times the event triggered during the current page session).</td>
   </tr>
   <tr>
     <td>insertAfter</td>
@@ -98,6 +98,12 @@ You may customise the look and feel of the loader by changing:
 All modern browsers (Firefox, Chrome, Safari, Opera, IE7+) should be supported. Please [open an issue](https://github.com/fredwu/jquery-endless-scroll/issues) if Endless Scroll doesn't work on a particular browser.
 
 ## Changelog
+
+v1.6.0 [master]
+
+- Refactored the code.
+- Renamed `data` option to `content`.
+- Tweaked the demo page.
 
 v1.5.1 [2012-03-08]
 

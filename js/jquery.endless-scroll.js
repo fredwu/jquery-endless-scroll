@@ -1,7 +1,7 @@
 /**
  * Endless Scroll plugin for jQuery
  *
- * v1.5.1
+ * v1.6.0
  *
  * Copyright (c) 2008-2012 Fred Wu
  *
@@ -32,9 +32,9 @@
  * fireOnce          boolean          only fire once until the execution of the current event is completed
  * fireDelay         integer          delay the subsequent firing, in milliseconds, 0 or false to disable delay
  * loader            string           the HTML to be displayed during loading
- * data              string|function  plain HTML data, can be either a string or a function that returns a string,
- *                                    when passed as a function it accepts one argument: fire sequence (the number
- *                                    of times the event triggered during the current page session)
+ * content           string|function  Plain HTML content to insert after each call, can be either a string or a function
+ *                                    that returns a string, when passed as a function it accepts one argument: fire
+ *                                    sequence (the number of times the event triggered during the current page session)
  * insertAfter       string           jQuery selector syntax: where to put the loader as well as the plain HTML data
  * callback          function         callback function, accepts one argument: fire sequence (the number of times
  *                                    the event triggered during the current page session)
@@ -52,95 +52,173 @@
  */
 
 (function($){
+$.fn.endlessScroll = function(options) {
 
-  $.fn.endlessScroll = function(options) {
+  var v = {}, // endless scroll global variables
+      m = {}; // endless scroll global methods
 
-    var defaults = {
-      bottomPixels:      50,
-      fireOnce:          true,
-      fireDelay:         150,
-      loader:            "<br />Loading...<br />",
-      data:              "",
-      insertAfter:       "div:last",
-      resetCounter:      function() { return false; },
-      callback:          function() { return true; },
-      ceaseFire:         function() { return false; },
-      intervalFrequency: 250
-    };
-
-    var options      = $.extend({}, defaults, options),
-        firing       = true,
-        fired        = false,
-        fireSequence = 0,
-        didScroll    = false,
-        scrollTarget = this,
-        scrollId     = "",
-        inner_wrap   = $(".endless_scroll_inner_wrap", this),
-        is_scrollable;
-
-    $(this).scroll(function() {
-      didScroll    = true;
-      scrollTarget = this;
-      scrollId     = $(scrollTarget).attr("id")
-    });
-
-    // use setInterval to improve scrolling performance: http://ejohn.org/blog/learning-from-twitter/
-    setInterval(function() {
-      if (didScroll && firing === true) {
-        didScroll = false;
-
-        if (options.ceaseFire.apply(scrollTarget, [fireSequence]) === true) {
-          firing = false;
-          return; // Scroll will still get called, but nothing will happen
-        }
-
-        if (scrollTarget == document || scrollTarget == window) {
-          is_scrollable = $(document).height() - $(window).height() <= $(window).scrollTop() + options.bottomPixels;
-        } else {
-          // calculates the actual height of the scrolling container
-          if (inner_wrap.length == 0) {
-            inner_wrap = $(scrollTarget).wrapInner("<div class=\"endless_scroll_inner_wrap\" />").find(".endless_scroll_inner_wrap");
-          }
-          is_scrollable = inner_wrap.length > 0 && (inner_wrap.height() - $(scrollTarget).height() <= $(scrollTarget).scrollTop() + options.bottomPixels);
-        }
-
-        if (is_scrollable && (options.fireOnce == false || (options.fireOnce == true && fired != true))) {
-          if (options.resetCounter.apply(scrollTarget) === true) {
-            fireSequence = 0;
-          }
-
-          fired = true;
-          fireSequence++;
-
-          $(options.insertAfter).after("<div class=\"endless_scroll_loader_" + scrollId + " endless_scroll_loader\">" + options.loader + "</div>");
-
-          data = typeof options.data == 'function' ? options.data.apply(scrollTarget, [fireSequence]) : options.data;
-
-          if (data !== false) {
-            $(options.insertAfter).after("<div id=\"endless_scroll_data\">" + data + "</div>");
-            $("#endless_scroll_data").hide().fadeIn(250, function() {$(this).removeAttr("id");});
-
-            options.callback.apply(scrollTarget, [fireSequence]);
-
-            if (options.fireDelay !== false || options.fireDelay !== 0) {
-              $("body").after("<div id=\"endless_scroll_marker\"></div>");
-              // slight delay for preventing event firing twice
-              $("#endless_scroll_marker").fadeTo(options.fireDelay, 1, function() {
-                $(this).remove();
-                fired = false;
-              });
-            }
-            else {
-              fired = false;
-            }
-          }
-
-          $(".endless_scroll_loader_" + scrollId).fadeOut(function() {
-            $(this).remove();
-          });
-        }
-      }
-    }, options.intervalFrequency);
+  v.defaults = {
+    bottomPixels:      50,
+    fireOnce:          true,
+    fireDelay:         150,
+    loader:            'Loading...',
+    content:           '',
+    insertAfter:       'div:last',
+    resetCounter:      function() { return false; },
+    callback:          function() { return true; },
+    ceaseFire:         function() { return false; },
+    intervalFrequency: 250
   };
 
+  v.options       = $.extend({}, v.defaults, options);
+  v.firing        = true;
+  v.fired         = false;
+  v.fireSequence  = 0;
+  v.didScroll     = false;
+  v.isScrollable  = true;
+  v.target        = this;
+  v.targetId      = '';
+  v.content       = '';
+  v.innerWrap     = $('.endless_scroll_inner_wrap', v.target);
+
+  m.initialize = function(targetDOM) {
+    // deprecate `data` in favour of `content`
+    if (v.options.data) {
+      v.options.content = v.options.data;
+    }
+
+    $(targetDOM).scroll(function() {
+      v.didScroll = true;
+      v.target    = this;
+      v.targetId  = $(v.target).attr('id');
+    });
+  };
+
+  m.shouldTryFiring = function() {
+    return v.didScroll && v.firing === true;
+  };
+
+  m.ceaseFireWhenNecessary = function() {
+    if (v.options.ceaseFire.apply(v.target, [v.fireSequence])) {
+      v.firing = false;
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  m.wrapContainer = function() {
+    if (v.innerWrap.length == 0) {
+      v.innerWrap = $(v.target).wrapInner('<div class="endless_scroll_inner_wrap" />')
+                               .find('.endless_scroll_inner_wrap');
+    }
+  };
+
+  m.isScrollableOrNot = function() {
+    if (v.target == document || v.target == window) {
+      v.isScrollable = (
+        $(document).height() - $(window).height()
+        <= $(window).scrollTop() + v.options.bottomPixels
+      );
+    } else {
+      m.wrapContainer();
+      v.isScrollable = (
+        v.innerWrap.length > 0 && (
+          v.innerWrap.height() - $(v.target).height()
+          <= $(v.target).scrollTop() + v.options.bottomPixels
+        )
+      );
+    }
+  };
+
+  m.shouldBeFiring = function() {
+    m.isScrollableOrNot();
+
+    return v.isScrollable && (
+      v.options.fireOnce == false || (v.options.fireOnce == true && v.fired != true)
+    );
+  };
+
+  m.resetFireSequenceWhenNecessary = function() {
+    if (v.options.resetCounter.apply(v.target) === true) {
+      v.fireSequence = 0;
+    }
+  };
+
+  m.acknowledgeFiring = function() {
+    v.fired = true;
+    v.fireSequence++;
+  };
+
+  m.insertLoader = function() {
+    $(v.options.insertAfter).after(
+      '<div class="endless_scroll_loader_' + v.targetId
+      + ' endless_scroll_loader">' + v.options.loader + '</div>'
+    );
+  };
+
+  m.removeLoader = function() {
+    $('.endless_scroll_loader_' + v.targetId).fadeOut(function() {
+      $(this).remove();
+    });
+  };
+
+  m.hasContent = function() {
+    if (typeof v.options.content == 'function') {
+      v.content = v.options.content.apply(v.target, [v.fireSequence]);
+    } else {
+      v.content = v.options.content;
+    }
+
+    return v.content !== false;
+  };
+
+  m.showContent = function() {
+    $(v.options.insertAfter).after('<div id="endless_scroll_content">' + v.content + '</div>');
+    $('#endless_scroll_content').hide().fadeIn(250, function() { $(this).removeAttr('id'); });
+  };
+
+  m.fireCallback = function() {
+    v.options.callback.apply(v.target, [v.fireSequence]);
+  };
+
+  m.delayFireingWhenNecessary = function() {
+    if (v.options.fireDelay > 0) {
+      $('body').after('<div id="endless_scroll_marker"></div>');
+      $('#endless_scroll_marker').fadeTo(v.options.fireDelay, 1, function() {
+        $(this).remove();
+        v.fired = false;
+      });
+    } else {
+      v.fired = false;
+    }
+  };
+
+  m.initialize(this);
+
+  setInterval(function() {
+    if (m.shouldTryFiring()) {
+      v.didScroll = false;
+
+      if (m.ceaseFireWhenNecessary()) {
+        return;
+      }
+
+      if (m.shouldBeFiring()) {
+        m.resetFireSequenceWhenNecessary();
+        m.acknowledgeFiring();
+        m.insertLoader();
+
+        if (m.hasContent()) {
+          m.showContent();
+          m.fireCallback();
+          m.delayFireingWhenNecessary();
+        }
+
+        m.removeLoader();
+      }
+    }
+  }, v.options.intervalFrequency);
+
+};
 })(jQuery);

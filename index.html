@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
@@ -7,10 +7,13 @@
 
   <style type="text/css" media="screen">
     * { margin: auto; }
-    body { margin: 20px 0; background: #cee; font-family: Helvetica, Arial, Verdana, 'Lucida Grande', sans-serif; }
+    body { margin: 20px 0; background: #abc; color: #111; font-family: Helvetica, Arial, Verdana, 'Lucida Grande', sans-serif; }
     h1, h3, p { text-align: center; }
-    ul#list { width: 50px; height: 200px; overflow-y: scroll; }
-    ul#images { text-align: center; list-style: none; }
+    div.example { padding: 20px; margin: 10px auto; background: #bcd; width: 750px; }
+    div.example h3 { margin-bottom: 10px; }
+    ul, ol { padding: 0; }
+    #list { width: 50px; height: 150px; overflow-y: scroll; }
+    #images { width: 600px; height: 550px; overflow-x: hidden; text-align: center; list-style: none; }
     .endless_scroll_loader { position: fixed; top: 10px; right: 20px; }
   </style>
 
@@ -18,10 +21,10 @@
   <script type="text/javascript" src="js/jquery.endless-scroll.js"></script>
   <script type="text/javascript" charset="utf-8">
     $(function() {
-      $('ul#list').endlessScroll({
+      $('#list').endlessScroll({
         fireOnce: false,
         insertAfter: "ul#list div:last",
-        data: function(i) {
+        content: function(i) {
           console.log(i)
           return '<li>' + i + '</li>'
         },
@@ -33,13 +36,13 @@
         intervalFrequency: 5
       });
 
-      $(window).endlessScroll({
+      $('#images').endlessScroll({
         bottomPixels: 500,
         fireDelay: 10,
         callback: function(i) {
           console.log(i)
           var last_img = $("ul#images li:last");
-          last_img.after(last_img.prev().prev().prev().prev().prev().prev().clone());
+          last_img.after(last_img.prev().prev().prev().prev().prev().prev().prev().clone());
         }
       });
     });
@@ -48,44 +51,52 @@
 
 <body>
   <h1>Endless Scroll Demo</h1>
-  <h3>by Fred Wu</h3>
-  <br /><br />
-  <p>Stops after 10 calls.</p>
-  <br />
-  <ul id="list">
-    <li>1</li>
-    <li>2</li>
-    <li>3</li>
-    <li>4</li>
-    <li>5</li>
-    <li>6</li>
-    <li>7</li>
-    <li>8</li>
-    <li>9</li>
-    <li>10</li>
-    <li>11</li>
-    <li>12</li>
-    <li>13</li>
-    <li>14</li>
-    <li>15</li>
-    <li>16</li>
-    <li>17</li>
-    <li>18</li>
-    <li>19</li>
-    <li>20</li>
-  </ul>
-  <br /><br />
-  <p>Never stops.</p>
-  <br />
-  <ul id="images">
-    <li><img src="img/grass-blades.jpg" width="580" height="360" alt="Grass Blades" /></li>
-    <li><img src="img/stones.jpg" width="580" height="360" alt="Stones" /></li>
-    <li><img src="img/sea-mist.jpg" width="580" height="360" alt="Sea Mist" /></li>
-    <li><img src="img/pier.jpg" width="580" height="360" alt="Pier" /></li>
-    <li><img src="img/lotus.jpg" width="580" height="360" alt="Lotus" /></li>
-    <li><img src="img/mojave.jpg" width="580" height="360" alt="Mojave" /></li>
-    <li><img src="img/lightning.jpg" width="580" height="360" alt="Lightning" /></li>
-  </ul>
+  <h3>by <a href="http://fredwu.me/">Fred Wu</a></h3>
+
+  <div class="example">
+    <h3>Ends in 10 calls:</h3>
+    <ul id="list">
+      <li>1</li>
+      <li>2</li>
+      <li>3</li>
+      <li>4</li>
+      <li>5</li>
+      <li>6</li>
+      <li>7</li>
+      <li>8</li>
+      <li>9</li>
+      <li>10</li>
+      <li>11</li>
+      <li>12</li>
+      <li>13</li>
+      <li>14</li>
+      <li>15</li>
+      <li>16</li>
+      <li>17</li>
+      <li>18</li>
+      <li>19</li>
+      <li>20</li>
+    </ul>
+  </div>
+
+  <div class="example">
+    <h3>Never ending:</h3>
+    <ul id="images">
+      <li><img src="img/grass-blades.jpg" width="580" height="360" alt="Grass Blades" /></li>
+      <li><img src="img/stones.jpg" width="580" height="360" alt="Stones" /></li>
+      <li><img src="img/sea-mist.jpg" width="580" height="360" alt="Sea Mist" /></li>
+      <li><img src="img/pier.jpg" width="580" height="360" alt="Pier" /></li>
+      <li><img src="img/lotus.jpg" width="580" height="360" alt="Lotus" /></li>
+      <li><img src="img/mojave.jpg" width="580" height="360" alt="Mojave" /></li>
+      <li><img src="img/lightning.jpg" width="580" height="360" alt="Lightning" /></li>
+      <li><img src="img/flowing-rock.jpg" width="580" height="360" alt="Grass Blades" /></li>
+    </ul>
+  </div>
+
+  <div class="example">
+    <p>Copyright &copy; <a href="http://fredwu.me/">Fred Wu</a></p>
+  </div>
+
 </body>
 
 </html>
