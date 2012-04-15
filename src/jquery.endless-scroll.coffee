@@ -71,7 +71,7 @@ class EndlessScroll
     @fireSequence = 0
     @didScroll    = false
     @isScrollable = true
-    @target       = this
+    @target       = scope
     @targetId     = ""
     @content      = ""
     @innerWrap    = $(".endless_scroll_inner_wrap", @target)
