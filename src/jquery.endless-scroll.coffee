@@ -76,6 +76,7 @@ class EndlessScroll
     @content      = ""
     @innerWrap    = $(".endless_scroll_inner_wrap", @target)
 
+    # deprecated options
     @options.content = @options.data if @options.data
 
     $(scope).scroll =>
