@@ -89,6 +89,10 @@ You may customise the look and feel of the loader by changing:
 - The `endless_scroll_loader` class;
 - Or the `endless_scroll_loader_<scroller_dom_html_id>`.
 
+## CoffeeScript and JavaScript
+
+Endless Scroll is written using [CoffeeScript](http://coffeescript.org/). To contribute and/or modify the source code, please edit `src/jquery.endless-scroll.coffee`. To include Endless Scroll in your webpage, please use `js/jquery.endless-scroll.js`.
+
 ## Demo
 
 [Click here for a simple demo](http://fredwu.github.com/jquery-endless-scroll/).
@@ -101,7 +105,7 @@ All modern browsers (Firefox, Chrome, Safari, Opera, IE7+) should be supported. 
 
 v1.6.0 [master]
 
-- Refactored the code.
+- Refactored the code using CoffeeScript.
 - Renamed `data` option to `content`.
 - Tweaked the demo page.
 
