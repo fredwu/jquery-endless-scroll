@@ -103,7 +103,7 @@ All modern browsers (Firefox, Chrome, Safari, Opera, IE7+) should be supported. 
 
 ## Changelog
 
-v1.6.0 [master]
+v1.6.0 [2012-04-15]
 
 - Refactored the code using CoffeeScript.
 - Renamed `data` option to `content`.
