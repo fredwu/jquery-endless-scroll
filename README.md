@@ -118,7 +118,7 @@ All modern browsers (Firefox, Chrome, Safari, Opera, IE7+) should be supported. 
 
 ## Changelog
 
-master
+v1.7.0 [2012-04-16]
 
 - Endless Scroll now supports infinite up-scrolling!
 - Renamed `bottomPixels` option to `inflowPixels`.
