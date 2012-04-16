@@ -86,25 +86,26 @@ class EndlessScroll
 
   run: ->
     setInterval (=>
-      if @shouldTryFiring()
-        @didScroll = false
-        return if @ceaseFireWhenNecessary()
+      return unless @shouldTryFiring()
+      return if @ceaseFireWhenNecessary()
+      return unless @shouldBeFiring()
 
-        if @shouldBeFiring()
-          @resetFireSequenceWhenNecessary()
-          @acknowledgeFiring()
-          @insertLoader()
+      @resetFireSequenceWhenNecessary()
+      @acknowledgeFiring()
+      @insertLoader()
 
-          if @hasContent()
-            @showContent()
-            @fireCallback()
-            @delayFireingWhenNecessary()
+      if @hasContent()
+        @showContent()
+        @fireCallback()
+        @delayFireingWhenNecessary()
 
-          @removeLoader()
+      @removeLoader()
     ), @options.intervalFrequency
 
   shouldTryFiring: ->
-    @didScroll and @firing is true
+    shouldTryOrNot = @didScroll and @firing is true
+    @didScroll = false if shouldTryOrNot
+    shouldTryOrNot
 
   ceaseFireWhenNecessary: ->
     if @options.ceaseFire.apply(@target, [ @fireSequence ])

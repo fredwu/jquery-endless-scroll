@@ -103,28 +103,34 @@ EndlessScroll = (function() {
   EndlessScroll.prototype.run = function() {
     var _this = this;
     return setInterval((function() {
-      if (_this.shouldTryFiring()) {
-        _this.didScroll = false;
-        if (_this.ceaseFireWhenNecessary()) {
-          return;
-        }
-        if (_this.shouldBeFiring()) {
-          _this.resetFireSequenceWhenNecessary();
-          _this.acknowledgeFiring();
-          _this.insertLoader();
-          if (_this.hasContent()) {
-            _this.showContent();
-            _this.fireCallback();
-            _this.delayFireingWhenNecessary();
-          }
-          return _this.removeLoader();
-        }
+      if (!_this.shouldTryFiring()) {
+        return;
       }
+      if (_this.ceaseFireWhenNecessary()) {
+        return;
+      }
+      if (!_this.shouldBeFiring()) {
+        return;
+      }
+      _this.resetFireSequenceWhenNecessary();
+      _this.acknowledgeFiring();
+      _this.insertLoader();
+      if (_this.hasContent()) {
+        _this.showContent();
+        _this.fireCallback();
+        _this.delayFireingWhenNecessary();
+      }
+      return _this.removeLoader();
     }), this.options.intervalFrequency);
   };
 
   EndlessScroll.prototype.shouldTryFiring = function() {
-    return this.didScroll && this.firing === true;
+    var shouldTryOrNot;
+    shouldTryOrNot = this.didScroll && this.firing === true;
+    if (shouldTryOrNot) {
+      this.didScroll = false;
+    }
+    return shouldTryOrNot;
   };
 
   EndlessScroll.prototype.ceaseFireWhenNecessary = function() {
