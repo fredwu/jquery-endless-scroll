@@ -93,6 +93,12 @@ You may customise the look and feel of the loader by changing:
 
 Endless Scroll, starting from v1.6.0 is written in [CoffeeScript](http://coffeescript.org/). To contribute and/or modify the source code, please edit `src/jquery.endless-scroll.coffee` and recompile the JavaScript. To include Endless Scroll in your webpage, please use the compiled `js/jquery.endless-scroll.js`.
 
+The command for automatically compiling to JavaScript is:
+
+```
+coffee -w -b -o js/ -c src/
+```
+
 ## Demo
 
 [Click here for a simple demo](http://fredwu.github.com/jquery-endless-scroll/).
