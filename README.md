@@ -91,12 +91,16 @@ $(window).endlessScroll({
 
 You may customise the look and feel of the loader by changing:
 
-- The `.endless_scroll_loader`;
-- Or `#endless_scroll_loader_<scroller_dom_html_id>`.
+- `.endless_scroll_loader` (class, for all Endless Scroll loaders);
+- Or `#endless_scroll_loader_<scroller_dom_html_id>` (id, for the specific loader).
 
 ### Custom Style for the Most Recently Loaded Content
 
 The most recently loaded content is wrapped in `#endless_scroll_content_current`.
+
+## Demo
+
+[Click here for a simple demo](http://fredwu.github.com/jquery-endless-scroll/).
 
 ## CoffeeScript and JavaScript
 
@@ -104,13 +108,9 @@ Endless Scroll, starting from v1.6.0 is written in [CoffeeScript](http://coffees
 
 The command for automatically compiling to JavaScript is:
 
-```
+```bash
 coffee -w -b -o js/ -c src/
 ```
-
-## Demo
-
-[Click here for a simple demo](http://fredwu.github.com/jquery-endless-scroll/).
 
 ## Browser Support
 
