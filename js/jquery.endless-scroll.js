@@ -21,28 +21,33 @@
   $(window).endlessScroll({
     fireOnce: false,
     fireDelay: false,
-    loader: "<div class=\"loading\"><div>",
+    loader: '<div class="loading"><div>',
     callback: function(){
-      alert("test");
+      alert('test');
     }
   });
 
   Configuration options:
 
-  bottomPixels      integer         the number of pixels from the bottom of the page that triggers the event
+  inflowPixels      integer         the number of pixels from the boundary of the element that triggers the event
   fireOnce          boolean         only fire once until the execution of the current event is completed
   fireDelay         integer         delay the subsequent firing, in milliseconds, 0 or false to disable delay
   loader            string          the HTML to be displayed during loading
   content           string|function Plain HTML content to insert after each call, can be either a string or a function
-                                    that returns a string, when passed as a function it accepts one argument: fire
-                                    sequence (the number of times the event triggered during the current page session)
+                                    that returns a string, when passed as a function it accepts two arguments:
+                                      <fireSequence> the number of times the event triggered during the current page session
+                                      <pageSequence> a positive or negative value that represents the scroll direction sequence
+  insertBefore      string          jQuery selector syntax: where to put the loader as well as the plain HTML data
   insertAfter       string          jQuery selector syntax: where to put the loader as well as the plain HTML data
-  callback          function        callback function, accepts one argument: fire sequence (the number of times
-                                    the event triggered during the current page session)
+  callback          function        callback function, accepts two arguments:
+                                      <fireSequence> the number of times the event triggered during the current page session
+                                      <pageSequence> a positive or negative value that represents the scroll direction sequence
   resetCounter      function        resets the fire sequence counter if the function returns true, this function
                                     could also perform hook actions since it is applied at the start of the event
   ceaseFire         function        stops the event (no more endless scrolling) if the function returns true,
-                                    accepts one argument: fire sequence
+                                    accepts two arguments:
+                                      <fireSequence> the number of times the event triggered during the current page session
+                                      <pageSequence> a positive or negative value that represents the scroll direction sequence
   intervalFrequency integer         set the frequency of the scroll event checking, the larger the frequency number,
                                     the less memory it consumes - but also the less sensitive the event trigger becomes
 
@@ -60,12 +65,13 @@ EndlessScroll = (function() {
   EndlessScroll.name = 'EndlessScroll';
 
   defaults = {
-    bottomPixels: 50,
+    inflowPixels: 50,
     fireOnce: true,
     fireDelay: 150,
-    loader: "Loading...",
-    content: "",
-    insertAfter: "div:last",
+    loader: 'Loading...',
+    content: '',
+    insertBefore: null,
+    insertAfter: null,
     intervalFrequency: 250,
     resetCounter: function() {
       return false;
@@ -81,22 +87,27 @@ EndlessScroll = (function() {
   function EndlessScroll(scope, options) {
     var _this = this;
     this.options = $.extend({}, defaults, options);
+    this.contentStack = [];
+    this.scrollDirection = 'next';
     this.firing = true;
     this.fired = false;
     this.fireSequence = 0;
+    this.pageSequence = 0;
+    this.nextSequence = 1;
+    this.prevSequence = -1;
+    this.lastScrollTop = 0;
+    this.insertLocation = this.options.insertAfter;
     this.didScroll = false;
     this.isScrollable = true;
     this.target = scope;
-    this.targetId = "";
-    this.content = "";
-    this.innerWrap = $(".endless_scroll_inner_wrap", this.target);
-    if (this.options.data) {
-      this.options.content = this.options.data;
-    }
+    this.targetId = '';
+    this.content = '';
+    this.innerWrap = $('.endless_scroll_inner_wrap', this.target);
+    this.handleDeprecatedOptions();
+    this.setInsertPositionsWhenNecessary();
     $(scope).scroll(function() {
-      _this.didScroll = true;
-      _this.target = scope;
-      return _this.targetId = $(_this.target).attr("id");
+      _this.detectTarget(scope);
+      return _this.detectScrollDirection();
     });
   }
 
@@ -124,6 +135,41 @@ EndlessScroll = (function() {
     }), this.options.intervalFrequency);
   };
 
+  EndlessScroll.prototype.handleDeprecatedOptions = function() {
+    if (this.options.data) {
+      this.options.content = this.options.data;
+    }
+    if (this.options.bottomPixels) {
+      return this.options.inflowPixels = this.options.bottomPixels;
+    }
+  };
+
+  EndlessScroll.prototype.setInsertPositionsWhenNecessary = function() {
+    if (defaults.insertBefore === null) {
+      this.options.insertBefore = "" + this.target.selector + " div:first";
+    }
+    if (defaults.insertAfter === null) {
+      return this.options.insertAfter = "" + this.target.selector + " div:last";
+    }
+  };
+
+  EndlessScroll.prototype.detectTarget = function(scope) {
+    this.target = scope;
+    return this.targetId = $(this.target).attr('id');
+  };
+
+  EndlessScroll.prototype.detectScrollDirection = function() {
+    var currentScrollTop;
+    this.didScroll = true;
+    currentScrollTop = $(this.target).scrollTop();
+    if (currentScrollTop > this.lastScrollTop) {
+      this.scrollDirection = 'next';
+    } else {
+      this.scrollDirection = 'prev';
+    }
+    return this.lastScrollTop = currentScrollTop;
+  };
+
   EndlessScroll.prototype.shouldTryFiring = function() {
     var shouldTryOrNot;
     shouldTryOrNot = this.didScroll && this.firing === true;
@@ -134,7 +180,7 @@ EndlessScroll = (function() {
   };
 
   EndlessScroll.prototype.ceaseFireWhenNecessary = function() {
-    if (this.options.ceaseFire.apply(this.target, [this.fireSequence])) {
+    if (this.options.ceaseFire.apply(this.target, [this.fireSequence, this.pageSequence])) {
       this.firing = false;
       return true;
     } else {
@@ -144,21 +190,38 @@ EndlessScroll = (function() {
 
   EndlessScroll.prototype.wrapContainer = function() {
     if (this.innerWrap.length === 0) {
-      return this.innerWrap = $(this.target).wrapInner("<div class=\"endless_scroll_inner_wrap\" />").find(".endless_scroll_inner_wrap");
+      return this.innerWrap = $(this.target).wrapInner('<div class="endless_scroll_inner_wrap" />').find('.endless_scroll_inner_wrap');
     }
   };
 
-  EndlessScroll.prototype.isScrollableOrNot = function() {
+  EndlessScroll.prototype.setScrollPositionWhenNecessary = function(target) {
+    if (this.scrollDirection === 'prev' && target.scrollTop() <= this.options.inflowPixels) {
+      return target.scrollTop(this.options.inflowPixels);
+    }
+  };
+
+  EndlessScroll.prototype.scrollableAreaMargin = function(innerWrap, target) {
+    switch (this.scrollDirection) {
+      case 'next':
+        return innerWrap.height() - $(target).height() <= $(target).scrollTop() + this.options.inflowPixels;
+      case 'prev':
+        return $(target).scrollTop() <= this.options.inflowPixels;
+    }
+  };
+
+  EndlessScroll.prototype.calculateScrollableCanvas = function() {
     if (this.target === document || this.target === window) {
-      return this.isScrollable = $(document).height() - $(window).height() <= $(window).scrollTop() + this.options.bottomPixels;
+      this.isScrollable = this.scrollableAreaMargin(document, window);
+      return this.setScrollPositionWhenNecessary(window);
     } else {
       this.wrapContainer();
-      return this.isScrollable = this.innerWrap.length > 0 && (this.innerWrap.height() - $(this.target).height() <= $(this.target).scrollTop() + this.options.bottomPixels);
+      this.isScrollable = this.innerWrap.length > 0 && this.scrollableAreaMargin(this.innerWrap, this.target);
+      return this.setScrollPositionWhenNecessary(this.target);
     }
   };
 
   EndlessScroll.prototype.shouldBeFiring = function() {
-    this.isScrollableOrNot();
+    this.calculateScrollableCanvas();
     return this.isScrollable && (this.options.fireOnce === false || (this.options.fireOnce === true && this.fired !== true));
   };
 
@@ -170,22 +233,37 @@ EndlessScroll = (function() {
 
   EndlessScroll.prototype.acknowledgeFiring = function() {
     this.fired = true;
-    return this.fireSequence++;
+    this.fireSequence++;
+    switch (this.scrollDirection) {
+      case 'next':
+        return this.pageSequence = this.nextSequence++;
+      case 'prev':
+        return this.pageSequence = this.prevSequence--;
+    }
+  };
+
+  EndlessScroll.prototype.insertContent = function(content) {
+    switch (this.scrollDirection) {
+      case 'next':
+        return $(this.options.insertAfter).after(content);
+      case 'prev':
+        return $(this.options.insertBefore).before(content);
+    }
   };
 
   EndlessScroll.prototype.insertLoader = function() {
-    return $(this.options.insertAfter).after("<div class=\"endless_scroll_loader_" + this.targetId + " endless_scroll_loader\">" + this.options.loader + "</div>");
+    return this.insertContent("<div class=\"endless_scroll_loader_" + this.targetId + "      endless_scroll_loader\">" + this.options.loader + "</div>");
   };
 
   EndlessScroll.prototype.removeLoader = function() {
-    return $(".endless_scroll_loader_" + this.targetId).fadeOut(function() {
+    return $('.endless_scroll_loader_' + this.targetId).fadeOut(function() {
       return $(this).remove();
     });
   };
 
   EndlessScroll.prototype.hasContent = function() {
-    if (typeof this.options.content === "function") {
-      this.content = this.options.content.apply(this.target, [this.fireSequence]);
+    if (typeof this.options.content === 'function') {
+      this.content = this.options.content.apply(this.target, [this.fireSequence, this.pageSequence]);
     } else {
       this.content = this.options.content;
     }
@@ -193,22 +271,20 @@ EndlessScroll = (function() {
   };
 
   EndlessScroll.prototype.showContent = function() {
-    $(this.options.insertAfter).after("<div id=\"endless_scroll_content\">" + this.content + "</div>");
-    return $("#endless_scroll_content").hide().fadeIn(250, function() {
-      return $(this).removeAttr("id");
-    });
+    $('#endless_scroll_content_current').removeAttr('id');
+    return this.insertContent("<div id=\"endless_scroll_content_current\"      class=\"endless_scroll_content\" rel=\"" + this.pageSequence + "\">" + this.content + "</div>");
   };
 
   EndlessScroll.prototype.fireCallback = function() {
-    return this.options.callback.apply(this.target, [this.fireSequence]);
+    return this.options.callback.apply(this.target, [this.fireSequence, this.pageSequence]);
   };
 
   EndlessScroll.prototype.delayFireingWhenNecessary = function() {
     var _this = this;
     if (this.options.fireDelay > 0) {
-      $("body").after("<div id=\"endless_scroll_marker\"></div>");
-      return $("#endless_scroll_marker").fadeTo(this.options.fireDelay, 1, function() {
-        $("#endless_scroll_marker").remove();
+      $('body').after('<div id="endless_scroll_marker"></div>');
+      return $('#endless_scroll_marker').fadeTo(this.options.fireDelay, 1, function() {
+        $('#endless_scroll_marker').remove();
         return _this.fired = false;
       });
     } else {

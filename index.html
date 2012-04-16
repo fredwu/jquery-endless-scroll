@@ -23,12 +23,13 @@
     $(function() {
       $('#list').endlessScroll({
         fireOnce: false,
-        insertAfter: "ul#list div:last",
-        content: function(i) {
-          console.log(i)
-          return '<li>' + i + '</li>'
+        insertBefore: "#list div:first",
+        insertAfter: "#list div:last",
+        content: function(i, p) {
+          console.log(i, p)
+          return '<li>' + p + '</li>'
         },
-        ceaseFire: function(i) {
+        ceaseFire: function(i, p) {
           if (i >= 10) {
             return true;
           }
@@ -36,11 +37,12 @@
         intervalFrequency: 5
       });
 
+      $('#images').scrollTop(501);
       $('#images').endlessScroll({
-        bottomPixels: 500,
+        inflowPixels: 500,
         fireDelay: 10,
-        callback: function(i) {
-          console.log(i)
+        callback: function(i, p) {
+          console.log(i, p)
           var last_img = $("ul#images li:last");
           last_img.after(last_img.prev().prev().prev().prev().prev().prev().prev().clone());
         }

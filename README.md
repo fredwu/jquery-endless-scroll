@@ -13,9 +13,9 @@ There are a few options to customise the behaviour of this plugin:
     <td><strong>Description</strong></td>
   </tr>
   <tr>
-    <td>bottomPixels</td>
+    <td>inflowPixels</td>
     <td>Integer</td>
-    <td>The number of pixels from the bottom of the page that triggers the event.</td>
+    <td>The number of pixels from the boundary of the element that triggers the event.</td>
   </tr>
   <tr>
     <td>fireOnce</td>
@@ -35,7 +35,12 @@ There are a few options to customise the behaviour of this plugin:
   <tr>
     <td>content</td>
     <td>String or Function</td>
-    <td>Plain HTML content to insert after each call, can be either a string or a function that returns a string, when passed as a function it accepts one argument: fire sequence (the number of times the event triggered during the current page session).</td>
+    <td>Plain HTML content to insert after each call, can be either a string or a function that returns a string, when passed as a function it accepts two arguments:<br /><em>fireSequence</em> the number of times the event triggered during the current page session<br /><em>pageSequence</em> a positive or negative value that represents the scroll direction sequence</td>
+  </tr>
+  <tr>
+    <td>insertBefore</td>
+    <td>String</td>
+    <td>jQuery selector syntax: where to put the loader as well as the plain HTML data.</td>
   </tr>
   <tr>
     <td>insertAfter</td>
@@ -45,7 +50,7 @@ There are a few options to customise the behaviour of this plugin:
   <tr>
     <td>callback</td>
     <td>Function</td>
-    <td>Callback function, accepts one argument: <em>fireSequence</em> (the number of times the event triggered during the current page session).</td>
+    <td>Callback function, accepts two arguments:<br /><em>fireSequence</em> the number of times the event triggered during the current page session<br /><em>pageSequence</em> a positive or negative value that represents the scroll direction sequence</td>
   </tr>
   <tr>
     <td>resetCounter</td>
@@ -55,7 +60,7 @@ There are a few options to customise the behaviour of this plugin:
   <tr>
     <td>ceaseFire</td>
     <td>Function</td>
-    <td>Stops the event (no more endless scrolling) if the function returns true, accepts one argument: <em>fireSequence</em>.</td>
+    <td>Stops the event (no more endless scrolling) if the function returns true, accepts two arguments:<br /><em>fireSequence</em> the number of times the event triggered during the current page session<br /><em>pageSequence</em> a positive or negative value that represents the scroll direction sequence</td>
   </tr>
   <tr>
     <td>intervalFrequency</td>
@@ -86,8 +91,12 @@ $(window).endlessScroll({
 
 You may customise the look and feel of the loader by changing:
 
-- The `endless_scroll_loader` class;
-- Or the `endless_scroll_loader_<scroller_dom_html_id>`.
+- The `.endless_scroll_loader`;
+- Or `#endless_scroll_loader_<scroller_dom_html_id>`.
+
+### Custom Style for the Most Recently Loaded Content
+
+The most recently loaded content is wrapped in `#endless_scroll_content_current`.
 
 ## CoffeeScript and JavaScript
 
@@ -108,6 +117,14 @@ coffee -w -b -o js/ -c src/
 All modern browsers (Firefox, Chrome, Safari, Opera, IE7+) should be supported. Please [open an issue](https://github.com/fredwu/jquery-endless-scroll/issues) if Endless Scroll doesn't work on a particular browser.
 
 ## Changelog
+
+master
+
+- Endless Scroll now supports infinite up-scrolling!
+- Renamed `bottomPixels` option to `inflowPixels`.
+- Added `insertBefore` option.
+- Added `pageSequence` to the callback arguments.
+- Fixed the unreliable `#endless_scroll_content_current` wrapper.
 
 v1.6.0 [2012-04-15]
 
