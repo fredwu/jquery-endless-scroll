@@ -35,7 +35,7 @@ There are a few options to customise the behaviour of this plugin:
   <tr>
     <td>content</td>
     <td>String or Function</td>
-    <td>Plain HTML content to insert after each call, can be either a string or a function that returns a string, when passed as a function it accepts two arguments:<br /><em>fireSequence</em> the number of times the event triggered during the current page session<br /><em>pageSequence</em> a positive or negative value that represents the scroll direction sequence<br /><em>scrollDirection</em> a string of either 'prev' or 'next'</td>
+    <td>Plain HTML content to insert after each call, can be either a string or a function that returns a string, when passed as a function it accepts three arguments:<br /><em>fireSequence</em> the number of times the event triggered during the current page session<br /><em>pageSequence</em> a positive or negative value that represents the scroll direction sequence<br /><em>scrollDirection</em> a string of either 'prev' or 'next'</td>
   </tr>
   <tr>
     <td>insertBefore</td>
@@ -50,7 +50,7 @@ There are a few options to customise the behaviour of this plugin:
   <tr>
     <td>callback</td>
     <td>Function</td>
-    <td>Callback function, accepts two arguments:<br /><em>fireSequence</em> the number of times the event triggered during the current page session<br /><em>pageSequence</em> a positive or negative value that represents the scroll direction sequence<br /><em>scrollDirection</em> a string of either 'prev' or 'next'</td>
+    <td>Callback function, accepts three arguments:<br /><em>fireSequence</em> the number of times the event triggered during the current page session<br /><em>pageSequence</em> a positive or negative value that represents the scroll direction sequence<br /><em>scrollDirection</em> a string of either 'prev' or 'next'</td>
   </tr>
   <tr>
     <td>resetCounter</td>
@@ -60,7 +60,7 @@ There are a few options to customise the behaviour of this plugin:
   <tr>
     <td>ceaseFire</td>
     <td>Function</td>
-    <td>Stops the event (no more endless scrolling) if the function returns true, accepts two arguments:<br /><em>fireSequence</em> the number of times the event triggered during the current page session<br /><em>pageSequence</em> a positive or negative value that represents the scroll direction sequence<br /><em>scrollDirection</em> a string of either 'prev' or 'next'</td>
+    <td>Stops the event (no more endless scrolling) if the function returns true, accepts three arguments:<br /><em>fireSequence</em> the number of times the event triggered during the current page session<br /><em>pageSequence</em> a positive or negative value that represents the scroll direction sequence<br /><em>scrollDirection</em> a string of either 'prev' or 'next'</td>
   </tr>
   <tr>
     <td>intervalFrequency</td>

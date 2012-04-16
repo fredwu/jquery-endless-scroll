@@ -33,20 +33,20 @@
   fireDelay         integer         delay the subsequent firing, in milliseconds, 0 or false to disable delay
   loader            string          the HTML to be displayed during loading
   content           string|function Plain HTML content to insert after each call, can be either a string or a function
-                                    that returns a string, when passed as a function it accepts two arguments:
+                                    that returns a string, when passed as a function it accepts three arguments:
                                       <fireSequence> the number of times the event triggered during the current page session
                                       <pageSequence> a positive or negative value that represents the scroll direction sequence
                                       <scrollDirection> a string of either 'prev' or 'next'
   insertBefore      string          jQuery selector syntax: where to put the loader as well as the plain HTML data
   insertAfter       string          jQuery selector syntax: where to put the loader as well as the plain HTML data
-  callback          function        callback function, accepts two arguments:
+  callback          function        callback function, accepts three arguments:
                                       <fireSequence> the number of times the event triggered during the current page session
                                       <pageSequence> a positive or negative value that represents the scroll direction sequence
                                       <scrollDirection> a string of either 'prev' or 'next'
   resetCounter      function        resets the fire sequence counter if the function returns true, this function
                                     could also perform hook actions since it is applied at the start of the event
   ceaseFire         function        stops the event (no more endless scrolling) if the function returns true,
-                                    accepts two arguments:
+                                    accepts three arguments:
                                       <fireSequence> the number of times the event triggered during the current page session
                                       <pageSequence> a positive or negative value that represents the scroll direction sequence
                                       <scrollDirection> a string of either 'prev' or 'next'
