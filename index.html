@@ -29,7 +29,7 @@
           console.log(i, p)
           return '<li>' + p + '</li>'
         },
-        ceaseFire: function(i, p) {
+        ceaseFire: function(i) {
           if (i >= 10) {
             return true;
           }
@@ -41,10 +41,18 @@
       $('#images').endlessScroll({
         inflowPixels: 500,
         fireDelay: 10,
-        callback: function(i, p) {
-          console.log(i, p)
-          var last_img = $("ul#images li:last");
-          last_img.after(last_img.prev().prev().prev().prev().prev().prev().prev().clone());
+        callback: function(i, p, d) {
+          console.log(i, p, d)
+          switch(d) {
+            case 'next':
+              var lastImg = $("ul#images li:last");
+              lastImg.after(lastImg.prev().prev().prev().prev().prev().prev().prev().clone());
+              break;
+            case 'prev':
+              var firstImg = $("ul#images li:first");
+              firstImg.before(firstImg.next().next().next().next().next().next().next().clone());
+              break;
+          }
         }
       });
     });

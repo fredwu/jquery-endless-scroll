@@ -36,17 +36,20 @@
                                     that returns a string, when passed as a function it accepts two arguments:
                                       <fireSequence> the number of times the event triggered during the current page session
                                       <pageSequence> a positive or negative value that represents the scroll direction sequence
+                                      <scrollDirection> a string of either 'prev' or 'next'
   insertBefore      string          jQuery selector syntax: where to put the loader as well as the plain HTML data
   insertAfter       string          jQuery selector syntax: where to put the loader as well as the plain HTML data
   callback          function        callback function, accepts two arguments:
                                       <fireSequence> the number of times the event triggered during the current page session
                                       <pageSequence> a positive or negative value that represents the scroll direction sequence
+                                      <scrollDirection> a string of either 'prev' or 'next'
   resetCounter      function        resets the fire sequence counter if the function returns true, this function
                                     could also perform hook actions since it is applied at the start of the event
   ceaseFire         function        stops the event (no more endless scrolling) if the function returns true,
                                     accepts two arguments:
                                       <fireSequence> the number of times the event triggered during the current page session
                                       <pageSequence> a positive or negative value that represents the scroll direction sequence
+                                      <scrollDirection> a string of either 'prev' or 'next'
   intervalFrequency integer         set the frequency of the scroll event checking, the larger the frequency number,
                                     the less memory it consumes - but also the less sensitive the event trigger becomes
 
@@ -143,7 +146,7 @@ class EndlessScroll
     shouldTryOrNot
 
   ceaseFireWhenNecessary: ->
-    if @options.ceaseFire.apply(@target, [ @fireSequence, @pageSequence ])
+    if @options.ceaseFire.apply(@target, [@fireSequence, @pageSequence, @scrollDirection])
       @firing = false
       true
     else
@@ -211,7 +214,7 @@ class EndlessScroll
 
   hasContent: ->
     if typeof @options.content is 'function'
-      @content = @options.content.apply(@target, [ @fireSequence, @pageSequence ])
+      @content = @options.content.apply(@target, [@fireSequence, @pageSequence, @scrollDirection])
     else
       @content = @options.content
     @content isnt false
@@ -224,7 +227,7 @@ class EndlessScroll
     )
 
   fireCallback: ->
-    @options.callback.apply @target, [ @fireSequence, @pageSequence ]
+    @options.callback.apply @target, [@fireSequence, @pageSequence, @scrollDirection]
 
   delayFireingWhenNecessary: ->
     if @options.fireDelay > 0

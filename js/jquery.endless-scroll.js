@@ -37,17 +37,20 @@
                                     that returns a string, when passed as a function it accepts two arguments:
                                       <fireSequence> the number of times the event triggered during the current page session
                                       <pageSequence> a positive or negative value that represents the scroll direction sequence
+                                      <scrollDirection> a string of either 'prev' or 'next'
   insertBefore      string          jQuery selector syntax: where to put the loader as well as the plain HTML data
   insertAfter       string          jQuery selector syntax: where to put the loader as well as the plain HTML data
   callback          function        callback function, accepts two arguments:
                                       <fireSequence> the number of times the event triggered during the current page session
                                       <pageSequence> a positive or negative value that represents the scroll direction sequence
+                                      <scrollDirection> a string of either 'prev' or 'next'
   resetCounter      function        resets the fire sequence counter if the function returns true, this function
                                     could also perform hook actions since it is applied at the start of the event
   ceaseFire         function        stops the event (no more endless scrolling) if the function returns true,
                                     accepts two arguments:
                                       <fireSequence> the number of times the event triggered during the current page session
                                       <pageSequence> a positive or negative value that represents the scroll direction sequence
+                                      <scrollDirection> a string of either 'prev' or 'next'
   intervalFrequency integer         set the frequency of the scroll event checking, the larger the frequency number,
                                     the less memory it consumes - but also the less sensitive the event trigger becomes
 
@@ -180,7 +183,7 @@ EndlessScroll = (function() {
   };
 
   EndlessScroll.prototype.ceaseFireWhenNecessary = function() {
-    if (this.options.ceaseFire.apply(this.target, [this.fireSequence, this.pageSequence])) {
+    if (this.options.ceaseFire.apply(this.target, [this.fireSequence, this.pageSequence, this.scrollDirection])) {
       this.firing = false;
       return true;
     } else {
@@ -263,7 +266,7 @@ EndlessScroll = (function() {
 
   EndlessScroll.prototype.hasContent = function() {
     if (typeof this.options.content === 'function') {
-      this.content = this.options.content.apply(this.target, [this.fireSequence, this.pageSequence]);
+      this.content = this.options.content.apply(this.target, [this.fireSequence, this.pageSequence, this.scrollDirection]);
     } else {
       this.content = this.options.content;
     }
@@ -276,7 +279,7 @@ EndlessScroll = (function() {
   };
 
   EndlessScroll.prototype.fireCallback = function() {
-    return this.options.callback.apply(this.target, [this.fireSequence, this.pageSequence]);
+    return this.options.callback.apply(this.target, [this.fireSequence, this.pageSequence, this.scrollDirection]);
   };
 
   EndlessScroll.prototype.delayFireingWhenNecessary = function() {
