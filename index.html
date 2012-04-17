@@ -22,6 +22,7 @@
   <script type="text/javascript" charset="utf-8">
     $(function() {
       $('#list').endlessScroll({
+        pagesToKeep: 10,
         fireOnce: false,
         insertBefore: "#list div:first",
         insertAfter: "#list div:last",
@@ -37,22 +38,15 @@
         intervalFrequency: 5
       });
 
-      $('#images').scrollTop(501);
+      $('#images').scrollTop(101);
+      var images = $("ul#images").clone().find("li");
       $('#images').endlessScroll({
-        inflowPixels: 500,
+        pagesToKeep: 5,
+        inflowPixels: 100,
         fireDelay: 10,
-        callback: function(i, p, d) {
+        content: function(i, p, d) {
           console.log(i, p, d)
-          switch(d) {
-            case 'next':
-              var lastImg = $("ul#images li:last");
-              lastImg.after(lastImg.prev().prev().prev().prev().prev().prev().prev().clone());
-              break;
-            case 'prev':
-              var firstImg = $("ul#images li:first");
-              firstImg.before(firstImg.next().next().next().next().next().next().next().clone());
-              break;
-          }
+          return images.eq(Math.floor(Math.random()*8))[0].outerHTML;
         }
       });
     });

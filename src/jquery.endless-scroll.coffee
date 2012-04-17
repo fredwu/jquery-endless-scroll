@@ -28,6 +28,7 @@
 
   Configuration options:
 
+  pagesToKeep       integer         the number of 'pages' to keep before either end of the scrolling content are discarded
   inflowPixels      integer         the number of pixels from the boundary of the element that triggers the event
   fireOnce          boolean         only fire once until the execution of the current event is completed
   fireDelay         integer         delay the subsequent firing, in milliseconds, 0 or false to disable delay
@@ -58,6 +59,7 @@
 
 class EndlessScroll
   defaults =
+    pagesToKeep:       null
     inflowPixels:      50
     fireOnce:          true
     fireDelay:         150
@@ -73,7 +75,7 @@ class EndlessScroll
 
   constructor: (scope, options) ->
     @options         = $.extend({}, defaults, options)
-    @contentStack    = []
+    @pagesStack      = [0]
     @scrollDirection = 'next'
     @firing          = true
     @fired           = false
@@ -111,7 +113,8 @@ class EndlessScroll
       if @hasContent()
         @showContent()
         @fireCallback()
-        @delayFireingWhenNecessary()
+        @cleanUpPagesWhenNecessary()
+        @delayFiringWhenNecessary()
 
       @removeLoader()
       @lastContent = @content
@@ -122,8 +125,10 @@ class EndlessScroll
     @options.inflowPixels = @options.bottomPixels if @options.bottomPixels
 
   setInsertPositionsWhenNecessary: ->
-    @options.insertBefore = "#{@target.selector} div:first" if defaults.insertBefore is null
-    @options.insertAfter  = "#{@target.selector} div:last"  if defaults.insertAfter is null
+    container = "#{@target.selector} div.endless_scroll_inner_wrap"
+
+    @options.insertBefore = "#{container} div:first" if defaults.insertBefore is null
+    @options.insertAfter  = "#{container} div:last"  if defaults.insertAfter is null
 
   detectTarget: (scope) ->
     @target   = scope
@@ -163,6 +168,7 @@ class EndlessScroll
     switch @scrollDirection
       when 'next'
         margin = innerWrap.height() - $(target).height() <= $(target).scrollTop() + @options.inflowPixels
+        target.scrollTop(innerWrap.height() - $(target).height() - @options.inflowPixels) if margin
       when 'prev'
         margin = $(target).scrollTop() <= @options.inflowPixels
         target.scrollTop(@options.inflowPixels) if margin
@@ -217,19 +223,38 @@ class EndlessScroll
       @content = @options.content.apply(@target, [@fireSequence, @pageSequence, @scrollDirection])
     else
       @content = @options.content
+
     @content isnt false
 
   showContent: ->
     $('#endless_scroll_content_current').removeAttr 'id'
     @insertContent(
       "<div id=\"endless_scroll_content_current\"
-      class=\"endless_scroll_content\" rel=\"#{@pageSequence}\">#{@content}</div>"
+      class=\"endless_scroll_content\" data-page=\"#{@pageSequence}\">#{@content}</div>"
     )
 
   fireCallback: ->
     @options.callback.apply @target, [@fireSequence, @pageSequence, @scrollDirection]
 
-  delayFireingWhenNecessary: ->
+  cleanUpPagesWhenNecessary: ->
+    return unless @options.pagesToKeep >= 1
+
+    switch @scrollDirection
+      when 'next' then @pagesStack.push(@pageSequence)
+      when 'prev' then @pagesStack.unshift(@pageSequence)
+
+    if @pagesStack.length > @options.pagesToKeep
+      switch @scrollDirection
+        when 'next' then pageToRemove = @prevSequence = @pagesStack.shift()
+        when 'prev' then pageToRemove = @nextSequence = @pagesStack.pop()
+
+    @removePage(pageToRemove)
+    @calculateScrollableCanvas()
+
+  removePage: (page) ->
+    $(".endless_scroll_content[data-page='#{page}']", @target).remove()
+
+  delayFiringWhenNecessary: ->
     if @options.fireDelay > 0
       $('body').after '<div id="endless_scroll_marker"></div>'
       $('#endless_scroll_marker').fadeTo @options.fireDelay, 1, =>

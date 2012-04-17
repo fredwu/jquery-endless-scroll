@@ -29,6 +29,7 @@
 
   Configuration options:
 
+  pagesToKeep       integer         the number of 'pages' to keep before either end of the scrolling content are discarded
   inflowPixels      integer         the number of pixels from the boundary of the element that triggers the event
   fireOnce          boolean         only fire once until the execution of the current event is completed
   fireDelay         integer         delay the subsequent firing, in milliseconds, 0 or false to disable delay
@@ -65,6 +66,7 @@ EndlessScroll = (function() {
   EndlessScroll.name = 'EndlessScroll';
 
   defaults = {
+    pagesToKeep: null,
     inflowPixels: 50,
     fireOnce: true,
     fireDelay: 150,
@@ -88,7 +90,7 @@ EndlessScroll = (function() {
   function EndlessScroll(scope, options) {
     var _this = this;
     this.options = $.extend({}, defaults, options);
-    this.contentStack = [];
+    this.pagesStack = [0];
     this.scrollDirection = 'next';
     this.firing = true;
     this.fired = false;
@@ -131,7 +133,8 @@ EndlessScroll = (function() {
       if (_this.hasContent()) {
         _this.showContent();
         _this.fireCallback();
-        _this.delayFireingWhenNecessary();
+        _this.cleanUpPagesWhenNecessary();
+        _this.delayFiringWhenNecessary();
       }
       _this.removeLoader();
       return _this.lastContent = _this.content;
@@ -148,11 +151,13 @@ EndlessScroll = (function() {
   };
 
   EndlessScroll.prototype.setInsertPositionsWhenNecessary = function() {
+    var container;
+    container = "" + this.target.selector + " div.endless_scroll_inner_wrap";
     if (defaults.insertBefore === null) {
-      this.options.insertBefore = "" + this.target.selector + " div:first";
+      this.options.insertBefore = "" + container + " div:first";
     }
     if (defaults.insertAfter === null) {
-      return this.options.insertAfter = "" + this.target.selector + " div:last";
+      return this.options.insertAfter = "" + container + " div:last";
     }
   };
 
@@ -202,6 +207,9 @@ EndlessScroll = (function() {
     switch (this.scrollDirection) {
       case 'next':
         margin = innerWrap.height() - $(target).height() <= $(target).scrollTop() + this.options.inflowPixels;
+        if (margin) {
+          target.scrollTop(innerWrap.height() - $(target).height() - this.options.inflowPixels);
+        }
         break;
       case 'prev':
         margin = $(target).scrollTop() <= this.options.inflowPixels;
@@ -274,14 +282,43 @@ EndlessScroll = (function() {
 
   EndlessScroll.prototype.showContent = function() {
     $('#endless_scroll_content_current').removeAttr('id');
-    return this.insertContent("<div id=\"endless_scroll_content_current\"      class=\"endless_scroll_content\" rel=\"" + this.pageSequence + "\">" + this.content + "</div>");
+    return this.insertContent("<div id=\"endless_scroll_content_current\"      class=\"endless_scroll_content\" data-page=\"" + this.pageSequence + "\">" + this.content + "</div>");
   };
 
   EndlessScroll.prototype.fireCallback = function() {
     return this.options.callback.apply(this.target, [this.fireSequence, this.pageSequence, this.scrollDirection]);
   };
 
-  EndlessScroll.prototype.delayFireingWhenNecessary = function() {
+  EndlessScroll.prototype.cleanUpPagesWhenNecessary = function() {
+    var pageToRemove;
+    if (!(this.options.pagesToKeep >= 1)) {
+      return;
+    }
+    switch (this.scrollDirection) {
+      case 'next':
+        this.pagesStack.push(this.pageSequence);
+        break;
+      case 'prev':
+        this.pagesStack.unshift(this.pageSequence);
+    }
+    if (this.pagesStack.length > this.options.pagesToKeep) {
+      switch (this.scrollDirection) {
+        case 'next':
+          pageToRemove = this.prevSequence = this.pagesStack.shift();
+          break;
+        case 'prev':
+          pageToRemove = this.nextSequence = this.pagesStack.pop();
+      }
+    }
+    this.removePage(pageToRemove);
+    return this.calculateScrollableCanvas();
+  };
+
+  EndlessScroll.prototype.removePage = function(page) {
+    return $(".endless_scroll_content[data-page='" + page + "']", this.target).remove();
+  };
+
+  EndlessScroll.prototype.delayFiringWhenNecessary = function() {
     var _this = this;
     if (this.options.fireDelay > 0) {
       $('body').after('<div id="endless_scroll_marker"></div>');

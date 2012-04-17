@@ -13,6 +13,11 @@ There are a few options to customise the behaviour of this plugin:
     <td><strong>Description</strong></td>
   </tr>
   <tr>
+    <td>pagesToKeep</td>
+    <td>Integer</td>
+    <td>The number of 'pages' to keep before either end of the scrolling content are discarded.</td>
+  </tr>
+  <tr>
     <td>inflowPixels</td>
     <td>Integer</td>
     <td>The number of pixels from the boundary of the element that triggers the event.</td>
@@ -127,6 +132,7 @@ master
 
 - Fixed `$(window)` uses.
 - Added `ceaseFireOnEmpty`.
+- Added `pagesToKeep`.
 
 v1.7.1 [2012-04-16]
 
