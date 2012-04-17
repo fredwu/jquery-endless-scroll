@@ -128,11 +128,11 @@ All modern browsers (Firefox, Chrome, Safari, Opera, IE7+) should be supported. 
 
 ## Changelog
 
-master
+v1.8.0 [2012-04-17]
 
-- Fixed `$(window)` uses.
 - Added `ceaseFireOnEmpty`.
 - Added `pagesToKeep`.
+- Fixed `$(window)` uses.
 
 v1.7.1 [2012-04-16]
 

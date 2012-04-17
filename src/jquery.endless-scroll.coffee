@@ -1,7 +1,7 @@
 ###
   Endless Scroll plugin for jQuery
 
-  v1.7.1
+  v1.8.0
 
   Copyright (c) 2008-2012 Fred Wu
 
