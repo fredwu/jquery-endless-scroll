@@ -169,9 +169,9 @@ class EndlessScroll
         $(target).scrollTop() <= @options.inflowPixels
 
   calculateScrollableCanvas: ->
-    if @target is document or @target is window
-      @isScrollable = @scrollableAreaMargin(document, window)
-      @setScrollPositionWhenNecessary(window)
+    if @target[0] is document or @target[0] is window
+      @isScrollable = @scrollableAreaMargin($(document), $(window))
+      @setScrollPositionWhenNecessary($(window))
     else
       @wrapContainer()
       @isScrollable = @innerWrap.length > 0 and @scrollableAreaMargin(@innerWrap, @target)

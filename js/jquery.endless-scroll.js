@@ -213,9 +213,9 @@ EndlessScroll = (function() {
   };
 
   EndlessScroll.prototype.calculateScrollableCanvas = function() {
-    if (this.target === document || this.target === window) {
-      this.isScrollable = this.scrollableAreaMargin(document, window);
-      return this.setScrollPositionWhenNecessary(window);
+    if (this.target[0] === document || this.target[0] === window) {
+      this.isScrollable = this.scrollableAreaMargin($(document), $(window));
+      return this.setScrollPositionWhenNecessary($(window));
     } else {
       this.wrapContainer();
       this.isScrollable = this.innerWrap.length > 0 && this.scrollableAreaMargin(this.innerWrap, this.target);
