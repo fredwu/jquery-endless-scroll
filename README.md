@@ -15,7 +15,7 @@ There are a few options to customise the behaviour of this plugin:
   <tr>
     <td>pagesToKeep</td>
     <td>Integer</td>
-    <td>The number of 'pages' to keep before either end of the scrolling content are discarded.</td>
+    <td>The number of 'pages' to keep before either end of the scrolling content are discarded, by default (value set to `null`) no content will be discarded.</td>
   </tr>
   <tr>
     <td>inflowPixels</td>

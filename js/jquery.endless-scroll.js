@@ -18,7 +18,7 @@
   $(window).endlessScroll();
 
   // using some custom options
-  $(window).endlessScroll({
+  $("#images").endlessScroll({
     fireOnce: false,
     fireDelay: false,
     loader: '<div class="loading"><div>',
@@ -29,7 +29,8 @@
 
   Configuration options:
 
-  pagesToKeep       integer         the number of 'pages' to keep before either end of the scrolling content are discarded
+  pagesToKeep       integer         the number of 'pages' to keep before either end of the scrolling content are discarded,
+                                    by default (value set to `null`) no content will be discarded
   inflowPixels      integer         the number of pixels from the boundary of the element that triggers the event
   fireOnce          boolean         only fire once until the execution of the current event is completed
   fireDelay         integer         delay the subsequent firing, in milliseconds, 0 or false to disable delay
