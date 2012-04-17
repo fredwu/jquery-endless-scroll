@@ -48,9 +48,14 @@ There are a few options to customise the behaviour of this plugin:
     <td>jQuery selector syntax: where to put the loader as well as the plain HTML data.</td>
   </tr>
   <tr>
-    <td>callback</td>
-    <td>Function</td>
-    <td>Callback function, accepts three arguments:<br /><em>fireSequence</em> the number of times the event triggered during the current page session<br /><em>pageSequence</em> a positive or negative value that represents the scroll direction sequence<br /><em>scrollDirection</em> a string of either 'prev' or 'next'</td>
+    <td>intervalFrequency</td>
+    <td>Integer</td>
+    <td>Set the frequency of the scroll event checking, the larger the frequency number, the less memory it consumes - but also the less sensitive the event trigger becomes.</td>
+  </tr>
+  <tr>
+    <td>ceaseFireOnEmpty</td>
+    <td>Boolean</td>
+    <td>Ceases fire automatically when the content is empty, set it to `false` if you are using `callback` instead of `content` for loading content.</td>
   </tr>
   <tr>
     <td>resetCounter</td>
@@ -58,14 +63,14 @@ There are a few options to customise the behaviour of this plugin:
     <td>Resets the fire sequence counter if the function returns true, this function could also perform hook actions since it is applied at the start of the event.</td>
   </tr>
   <tr>
+    <td>callback</td>
+    <td>Function</td>
+    <td>Callback function, accepts three arguments:<br /><em>fireSequence</em> the number of times the event triggered during the current page session<br /><em>pageSequence</em> a positive or negative value that represents the scroll direction sequence<br /><em>scrollDirection</em> a string of either 'prev' or 'next'</td>
+  </tr>
+  <tr>
     <td>ceaseFire</td>
     <td>Function</td>
     <td>Stops the event (no more endless scrolling) if the function returns true, accepts three arguments:<br /><em>fireSequence</em> the number of times the event triggered during the current page session<br /><em>pageSequence</em> a positive or negative value that represents the scroll direction sequence<br /><em>scrollDirection</em> a string of either 'prev' or 'next'</td>
-  </tr>
-  <tr>
-    <td>intervalFrequency</td>
-    <td>Integer</td>
-    <td>Set the frequency of the scroll event checking, the larger the frequency number, the less memory it consumes - but also the less sensitive the event trigger becomes.</td>
   </tr>
 </table>
 
@@ -117,6 +122,11 @@ coffee -w -b -o js/ -c src/
 All modern browsers (Firefox, Chrome, Safari, Opera, IE7+) should be supported. Please [open an issue](https://github.com/fredwu/jquery-endless-scroll/issues) if Endless Scroll doesn't work on a particular browser.
 
 ## Changelog
+
+master
+
+- Fixed `$(window)` uses.
+- Added `ceaseFireOnEmpty`.
 
 v1.7.1 [2012-04-16]
 

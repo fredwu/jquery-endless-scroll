@@ -40,24 +40,21 @@
                                       <scrollDirection> a string of either 'prev' or 'next'
   insertBefore      string          jQuery selector syntax: where to put the loader as well as the plain HTML data
   insertAfter       string          jQuery selector syntax: where to put the loader as well as the plain HTML data
+  intervalFrequency integer         set the frequency of the scroll event checking, the larger the frequency number,
+                                    the less memory it consumes - but also the less sensitive the event trigger becomes
+  ceaseFireOnEmpty  boolean         ceases fire automatically when the content is empty, set it to `false` if you are using
+                                    `callback` instead of `content` for loading content
+  resetCounter      function        resets the fire sequence counter if the function returns true, this function
+                                    could also perform hook actions since it is applied at the start of the event
   callback          function        callback function, accepts three arguments:
                                       <fireSequence> the number of times the event triggered during the current page session
                                       <pageSequence> a positive or negative value that represents the scroll direction sequence
                                       <scrollDirection> a string of either 'prev' or 'next'
-  resetCounter      function        resets the fire sequence counter if the function returns true, this function
-                                    could also perform hook actions since it is applied at the start of the event
   ceaseFire         function        stops the event (no more endless scrolling) if the function returns true,
                                     accepts three arguments:
                                       <fireSequence> the number of times the event triggered during the current page session
                                       <pageSequence> a positive or negative value that represents the scroll direction sequence
                                       <scrollDirection> a string of either 'prev' or 'next'
-  intervalFrequency integer         set the frequency of the scroll event checking, the larger the frequency number,
-                                    the less memory it consumes - but also the less sensitive the event trigger becomes
-
-  Usage tips:
-
-  The plugin is more useful when used with the callback function, which can then make AJAX calls to retrieve content.
-  The fire sequence argument (for the callback function) is useful for 'pagination'-like features.
 */
 
 var EndlessScroll;
@@ -76,6 +73,7 @@ EndlessScroll = (function() {
     insertBefore: null,
     insertAfter: null,
     intervalFrequency: 250,
+    ceaseFireOnEmpty: true,
     resetCounter: function() {
       return false;
     },
@@ -105,6 +103,7 @@ EndlessScroll = (function() {
     this.target = scope;
     this.targetId = '';
     this.content = '';
+    this.lastContent = 'dummy';
     this.innerWrap = $('.endless_scroll_inner_wrap', this.target);
     this.handleDeprecatedOptions();
     this.setInsertPositionsWhenNecessary();
@@ -134,7 +133,8 @@ EndlessScroll = (function() {
         _this.fireCallback();
         _this.delayFireingWhenNecessary();
       }
-      return _this.removeLoader();
+      _this.removeLoader();
+      return _this.lastContent = _this.content;
     }), this.options.intervalFrequency);
   };
 
@@ -183,7 +183,7 @@ EndlessScroll = (function() {
   };
 
   EndlessScroll.prototype.ceaseFireWhenNecessary = function() {
-    if (this.options.ceaseFire.apply(this.target, [this.fireSequence, this.pageSequence, this.scrollDirection])) {
+    if (this.options.ceaseFireOnEmpty === true && this.lastContent === '' || this.options.ceaseFire.apply(this.target, [this.fireSequence, this.pageSequence, this.scrollDirection])) {
       this.firing = false;
       return true;
     } else {
@@ -191,35 +191,34 @@ EndlessScroll = (function() {
     }
   };
 
-  EndlessScroll.prototype.wrapContainer = function() {
+  EndlessScroll.prototype.wrapContainer = function(target) {
     if (this.innerWrap.length === 0) {
-      return this.innerWrap = $(this.target).wrapInner('<div class="endless_scroll_inner_wrap" />').find('.endless_scroll_inner_wrap');
-    }
-  };
-
-  EndlessScroll.prototype.setScrollPositionWhenNecessary = function(target) {
-    if (this.scrollDirection === 'prev' && target.scrollTop() <= this.options.inflowPixels) {
-      return target.scrollTop(this.options.inflowPixels);
+      return this.innerWrap = $(target).wrapInner('<div class="endless_scroll_content" data-page="0" />').wrapInner('<div class="endless_scroll_inner_wrap" />').find('.endless_scroll_inner_wrap');
     }
   };
 
   EndlessScroll.prototype.scrollableAreaMargin = function(innerWrap, target) {
+    var margin;
     switch (this.scrollDirection) {
       case 'next':
-        return innerWrap.height() - $(target).height() <= $(target).scrollTop() + this.options.inflowPixels;
+        margin = innerWrap.height() - $(target).height() <= $(target).scrollTop() + this.options.inflowPixels;
+        break;
       case 'prev':
-        return $(target).scrollTop() <= this.options.inflowPixels;
+        margin = $(target).scrollTop() <= this.options.inflowPixels;
+        if (margin) {
+          target.scrollTop(this.options.inflowPixels);
+        }
     }
+    return margin;
   };
 
   EndlessScroll.prototype.calculateScrollableCanvas = function() {
     if (this.target[0] === document || this.target[0] === window) {
-      this.isScrollable = this.scrollableAreaMargin($(document), $(window));
-      return this.setScrollPositionWhenNecessary($(window));
+      this.wrapContainer("body");
+      return this.isScrollable = this.scrollableAreaMargin($(document), $(window));
     } else {
-      this.wrapContainer();
-      this.isScrollable = this.innerWrap.length > 0 && this.scrollableAreaMargin(this.innerWrap, this.target);
-      return this.setScrollPositionWhenNecessary(this.target);
+      this.wrapContainer(this.target);
+      return this.isScrollable = this.innerWrap.length > 0 && this.scrollableAreaMargin(this.innerWrap, this.target);
     }
   };
 

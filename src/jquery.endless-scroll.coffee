@@ -39,24 +39,21 @@
                                       <scrollDirection> a string of either 'prev' or 'next'
   insertBefore      string          jQuery selector syntax: where to put the loader as well as the plain HTML data
   insertAfter       string          jQuery selector syntax: where to put the loader as well as the plain HTML data
+  intervalFrequency integer         set the frequency of the scroll event checking, the larger the frequency number,
+                                    the less memory it consumes - but also the less sensitive the event trigger becomes
+  ceaseFireOnEmpty  boolean         ceases fire automatically when the content is empty, set it to `false` if you are using
+                                    `callback` instead of `content` for loading content
+  resetCounter      function        resets the fire sequence counter if the function returns true, this function
+                                    could also perform hook actions since it is applied at the start of the event
   callback          function        callback function, accepts three arguments:
                                       <fireSequence> the number of times the event triggered during the current page session
                                       <pageSequence> a positive or negative value that represents the scroll direction sequence
                                       <scrollDirection> a string of either 'prev' or 'next'
-  resetCounter      function        resets the fire sequence counter if the function returns true, this function
-                                    could also perform hook actions since it is applied at the start of the event
   ceaseFire         function        stops the event (no more endless scrolling) if the function returns true,
                                     accepts three arguments:
                                       <fireSequence> the number of times the event triggered during the current page session
                                       <pageSequence> a positive or negative value that represents the scroll direction sequence
                                       <scrollDirection> a string of either 'prev' or 'next'
-  intervalFrequency integer         set the frequency of the scroll event checking, the larger the frequency number,
-                                    the less memory it consumes - but also the less sensitive the event trigger becomes
-
-  Usage tips:
-
-  The plugin is more useful when used with the callback function, which can then make AJAX calls to retrieve content.
-  The fire sequence argument (for the callback function) is useful for 'pagination'-like features.
 ###
 
 class EndlessScroll
@@ -69,6 +66,7 @@ class EndlessScroll
     insertBefore:      null
     insertAfter:       null
     intervalFrequency: 250
+    ceaseFireOnEmpty:  true
     resetCounter:      -> false
     callback:          -> true
     ceaseFire:         -> false
@@ -90,6 +88,7 @@ class EndlessScroll
     @target          = scope
     @targetId        = ''
     @content         = ''
+    @lastContent     = 'dummy'
     @innerWrap       = $('.endless_scroll_inner_wrap', @target)
 
     @handleDeprecatedOptions()
@@ -115,6 +114,7 @@ class EndlessScroll
         @delayFireingWhenNecessary()
 
       @removeLoader()
+      @lastContent = @content
     ), @options.intervalFrequency
 
   handleDeprecatedOptions: ->
@@ -146,36 +146,36 @@ class EndlessScroll
     shouldTryOrNot
 
   ceaseFireWhenNecessary: ->
-    if @options.ceaseFire.apply(@target, [@fireSequence, @pageSequence, @scrollDirection])
+    if @options.ceaseFireOnEmpty is true and @lastContent is '' or
+    @options.ceaseFire.apply(@target, [@fireSequence, @pageSequence, @scrollDirection])
       @firing = false
       true
     else
       false
 
-  wrapContainer: ->
+  wrapContainer: (target) ->
     if @innerWrap.length is 0
-      @innerWrap = $(@target).wrapInner('<div class="endless_scroll_inner_wrap" />')
+      @innerWrap = $(target).wrapInner('<div class="endless_scroll_content" data-page="0" />')
+                             .wrapInner('<div class="endless_scroll_inner_wrap" />')
                              .find('.endless_scroll_inner_wrap')
-
-  setScrollPositionWhenNecessary: (target) ->
-    if @scrollDirection is 'prev' and target.scrollTop() <= @options.inflowPixels
-      target.scrollTop(@options.inflowPixels)
 
   scrollableAreaMargin: (innerWrap, target) ->
     switch @scrollDirection
       when 'next'
-        innerWrap.height() - $(target).height() <= $(target).scrollTop() + @options.inflowPixels
+        margin = innerWrap.height() - $(target).height() <= $(target).scrollTop() + @options.inflowPixels
       when 'prev'
-        $(target).scrollTop() <= @options.inflowPixels
+        margin = $(target).scrollTop() <= @options.inflowPixels
+        target.scrollTop(@options.inflowPixels) if margin
+
+    margin
 
   calculateScrollableCanvas: ->
     if @target[0] is document or @target[0] is window
+      @wrapContainer("body")
       @isScrollable = @scrollableAreaMargin($(document), $(window))
-      @setScrollPositionWhenNecessary($(window))
     else
-      @wrapContainer()
+      @wrapContainer(@target)
       @isScrollable = @innerWrap.length > 0 and @scrollableAreaMargin(@innerWrap, @target)
-      @setScrollPositionWhenNecessary(@target)
 
   shouldBeFiring: ->
     @calculateScrollableCanvas()
