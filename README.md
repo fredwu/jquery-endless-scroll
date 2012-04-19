@@ -85,7 +85,7 @@ There are a few options to customise the behaviour of this plugin:
   </tr>
 </table>
 
-In a typical scenario, you won't be using the `data` option, but rather the `callback` option. You may use it to trigger an AJAX call and updates/inserts your page content.
+In a typical scenario, you won't be using the `content` option, but rather the `callback` option. You may use it to trigger an AJAX call and updates/inserts your page content.
 
 ## Usage
 
