@@ -128,8 +128,8 @@ class EndlessScroll
   setInsertPositionsWhenNecessary: ->
     container = "#{@target.selector} div.endless_scroll_inner_wrap"
 
-    @options.insertBefore = "#{container} div:first" if defaults.insertBefore is null
-    @options.insertAfter  = "#{container} div:last"  if defaults.insertAfter is null
+    @options.insertBefore = "#{container} div:first" if @options.insertBefore is null
+    @options.insertAfter  = "#{container} div:last"  if @options.insertAfter is null
 
   detectTarget: (scope) ->
     @target   = scope
