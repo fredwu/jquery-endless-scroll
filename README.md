@@ -46,7 +46,7 @@ There are a few options to customise the behaviour of this plugin:
   <tr>
     <td>content</td>
     <td>String or Function</td>
-    <td>Plain HTML content to insert after each call, can be either a string or a function that returns a string, when passed as a function it accepts three arguments:<ul><li><em>fireSequence</em> the number of times the event triggered during the current page session</li><li><em>pageSequence</em> a positive or negative value that represents the scroll direction sequence</li><li><em>scrollDirection</em> a string of either 'prev' or 'next'</li></ul></td>
+    <td>Plain HTML content to insert after each call, can be either a string or a function that returns a string, when passed as a function it accepts three arguments:<ul><li><em>fireSequence</em> the number of times the event triggered during the current page session</li><li><em>pageSequence</em> a positive or negative integer that represents the scroll direction sequence</li><li><em>scrollDirection</em> a string of either 'prev' or 'next'</li></ul></td>
   </tr>
   <tr>
     <td>insertBefore</td>
@@ -76,12 +76,12 @@ There are a few options to customise the behaviour of this plugin:
   <tr>
     <td>callback</td>
     <td>Function</td>
-    <td>Callback function, accepts three arguments:<ul><li><em>fireSequence</em> the number of times the event triggered during the current page session</li><li><em>pageSequence</em> a positive or negative value that represents the scroll direction sequence</li><li><em>scrollDirection</em> a string of either 'prev' or 'next'</li></ul></td>
+    <td>Callback function, accepts three arguments:<ul><li><em>fireSequence</em> the number of times the event triggered during the current page session</li><li><em>pageSequence</em> a positive or negative integer that represents the scroll direction sequence</li><li><em>scrollDirection</em> a string of either 'prev' or 'next'</li></ul></td>
   </tr>
   <tr>
     <td>ceaseFire</td>
     <td>Function</td>
-    <td>Stops the event (no more endless scrolling) if the function returns true, accepts three arguments:<ul><li><em>fireSequence</em> the number of times the event triggered during the current page session</li><li><em>pageSequence</em> a positive or negative value that represents the scroll direction sequence</li><li><em>scrollDirection</em> a string of either 'prev' or 'next'</li></ul></td>
+    <td>Stops the event (no more endless scrolling) if the function returns true, accepts three arguments:<ul><li><em>fireSequence</em> the number of times the event triggered during the current page session</li><li><em>pageSequence</em> a positive or negative integer that represents the scroll direction sequence</li><li><em>scrollDirection</em> a string of either 'prev' or 'next'</li></ul></td>
   </tr>
 </table>
 
@@ -126,11 +126,22 @@ The command for automatically compiling to JavaScript is:
 coffee -w -b -o js/ -c src/
 ```
 
+Starting from v2.0.0 the code base is tested with [Mocha](http://visionmedia.github.com/mocha/) and [Chai](http://chaijs.com/). The tests can be found in `test/`, please write the tests in `test/tests.coffee`. Again, to automatically compile the test code to JavaScript:
+
+```bash
+coffee -w -b -o test/ -c test/
+```
+
 ## Browser Support
 
 All modern browsers (Firefox, Chrome, Safari, Opera, IE7+) should be supported. Please [open an issue](https://github.com/fredwu/jquery-endless-scroll/issues) if Endless Scroll doesn't work on a particular browser.
 
 ## Changelog
+
+v2.0.0
+
+- Completely rewritten from the ground up with tests.
+- A new demo page based on Twitter Bootstrap.
 
 v1.8.0 [2012-04-17]
 
