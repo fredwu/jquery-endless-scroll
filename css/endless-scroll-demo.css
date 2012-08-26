@@ -1,0 +1,25 @@
+section {
+  padding-top: 90px;
+}
+
+ul li {
+  list-style: none;
+}
+
+.navbar .nav {
+  position: absolute;
+  padding-left: 200px;
+  left: auto;
+  bottom: 20px;
+}
+
+.footer {
+  background-color: #F5F5F5;
+  border-top: 1px solid #E5E5E5;
+  margin-top: 70px;
+  padding: 50px 0;
+}
+
+.footer p {
+  text-align: center;
+}
