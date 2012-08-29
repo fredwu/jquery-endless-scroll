@@ -9,6 +9,7 @@
  Usage:
 
    $(document).stub('height', 1337)
+   $(document).stub('height', function() { return 42; } )
    $(document).unstub('height')
 */
 
@@ -26,7 +27,7 @@ JQStub = (function() {
     _tempFunc = this.stubbedFuncs[funcName] = $.fn[funcName];
     $.fn[funcName] = function() {
       if (this[0] === target[0] && !!self.stubbedFuncs[funcName]) {
-        return stubVal;
+        return self._returnValOrFunction(stubVal);
       } else {
         return _tempFunc.apply(this, arguments);
       }
@@ -37,6 +38,18 @@ JQStub = (function() {
   JQStub.prototype.unstub = function(target, funcName) {
     delete this.stubbedFuncs[funcName];
     return target;
+  };
+
+  JQStub.prototype._returnValOrFunction = function(thing) {
+    if (this._isFunction(thing)) {
+      return thing.apply(this, arguments);
+    } else {
+      return thing;
+    }
+  };
+
+  JQStub.prototype._isFunction = function(thing) {
+    return thing && {}.toString.call(thing) === '[object Function]';
   };
 
   return JQStub;

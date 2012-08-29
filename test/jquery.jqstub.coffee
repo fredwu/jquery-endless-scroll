@@ -8,6 +8,7 @@
  Usage:
 
    $(document).stub('height', 1337)
+   $(document).stub('height', function() { return 42; } )
    $(document).unstub('height')
 ###
 
@@ -21,7 +22,7 @@ class JQStub
 
     $.fn[funcName] = ->
       if this[0] == target[0] && !!self.stubbedFuncs[funcName]
-        stubVal
+        self._returnValOrFunction(stubVal)
       else
         _tempFunc.apply(this, arguments)
 
@@ -31,6 +32,15 @@ class JQStub
     delete @stubbedFuncs[funcName]
 
     target
+
+  _returnValOrFunction: (thing) ->
+    if @_isFunction(thing)
+      thing.apply(this, arguments)
+    else
+      thing
+
+  _isFunction: (thing) ->
+    thing && {}.toString.call(thing) == '[object Function]'
 
 jqstub = new JQStub
 
