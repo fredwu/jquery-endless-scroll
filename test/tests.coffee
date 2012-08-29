@@ -1,3 +1,6 @@
+beforeEach ->
+  $.unstubAll()
+
 describe 'Instance', ->
 
   it 'initiates an instance', ->
@@ -27,11 +30,6 @@ describe 'Whether Class (Boolean Calculation)', ->
   beforeEach ->
     $(document).stub('height', 1000)
     $(window).stub('height', 600)
-
-  afterEach ->
-    $(document).unstub('height')
-    $(window).unstub('height')
-    $(window).unstub('scrollTop')
 
   it '#DocumentIsScrollableDownward - TRUE', ->
     $(window).stub('scrollTop', 500)

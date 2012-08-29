@@ -33,6 +33,9 @@ class JQStub
 
     target
 
+  unstubAll: ->
+    @stubbedFuncs = {}
+
   _returnValOrFunction: (thing) ->
     if @_isFunction(thing)
       thing.apply(this, arguments)
@@ -53,3 +56,6 @@ $.fn.stub = (funcName, stubVal) ->
 
 $.fn.unstub = (funcName) ->
   jqstub.unstub(this, funcName)
+
+$.unstubAll = ->
+  jqstub.unstubAll()

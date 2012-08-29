@@ -40,6 +40,10 @@ JQStub = (function() {
     return target;
   };
 
+  JQStub.prototype.unstubAll = function() {
+    return this.stubbedFuncs = {};
+  };
+
   JQStub.prototype._returnValOrFunction = function(thing) {
     if (this._isFunction(thing)) {
       return thing.apply(this, arguments);
@@ -69,4 +73,8 @@ $.fn.stub = function(funcName, stubVal) {
 
 $.fn.unstub = function(funcName) {
   return jqstub.unstub(this, funcName);
+};
+
+$.unstubAll = function() {
+  return jqstub.unstubAll();
 };
