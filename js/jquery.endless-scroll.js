@@ -75,12 +75,14 @@
                                       <scrollDirection> a string of either 'prev' or 'next'
 */
 
-var EndlessScroll;
+var EndlessScroll, Whether;
 
 EndlessScroll = (function() {
   var defaults;
 
   defaults = {
+    topPixels: 50,
+    bottomPixels: 50,
     intervalFrequency: 250
   };
 
@@ -95,6 +97,18 @@ EndlessScroll = (function() {
   };
 
   return EndlessScroll;
+
+})();
+
+Whether = (function() {
+
+  function Whether() {}
+
+  Whether.DocumentIsScrollableDownward = function(options) {
+    return $(document).height() - $(window).height() <= $(window).scrollTop() + options.bottomPixels;
+  };
+
+  return Whether;
 
 })();
 

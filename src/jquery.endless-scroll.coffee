@@ -76,6 +76,8 @@
 
 class EndlessScroll
   defaults =
+    topPixels:         50
+    bottomPixels:      50
     intervalFrequency: 250
 
   constructor: (scope, options) ->
@@ -85,6 +87,12 @@ class EndlessScroll
     setInterval ->
       true
     , @options.intervalFrequency
+
+class Whether
+  @DocumentIsScrollableDownward: (options) ->
+    $(document).height() - $(window).height() <=
+      $(window).scrollTop() + options.bottomPixels
+
 
 
 window.EndlessScroll = EndlessScroll

@@ -30,3 +30,31 @@ describe('Instance Options', function() {
     return subjectB.options.intervalFrequency.should.equal(1337);
   });
 });
+
+describe('Whether Class (Boolean Calculation)', function() {
+  beforeEach(function() {
+    $(document).stub('height', 1000);
+    return $(window).stub('height', 600);
+  });
+  afterEach(function() {
+    $(document).unstub('height');
+    $(window).unstub('height');
+    return $(window).unstub('scrollTop');
+  });
+  it('#DocumentIsScrollableDownward - TRUE', function() {
+    var result;
+    $(window).stub('scrollTop', 500);
+    result = Whether.DocumentIsScrollableDownward({
+      bottomPixels: 50
+    });
+    return result.should.be["true"];
+  });
+  return it('#DocumentIsScrollableDownward - FALSE', function() {
+    var result;
+    $(window).stub('scrollTop', 100);
+    result = Whether.DocumentIsScrollableDownward({
+      bottomPixels: 50
+    });
+    return result.should.be["false"];
+  });
+});
