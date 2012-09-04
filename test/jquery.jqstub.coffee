@@ -1,5 +1,5 @@
 ###
- JQStub - simple stub library for jQuery objects
+ JQStub - a simple stub library for jQuery objects
 
  Copyright (c) 2012 Fred Wu
 
@@ -13,6 +13,7 @@
 ###
 
 class JQStub
+
   stubbedFuncs: {}
 
   stub: (target, funcName, stubVal) ->

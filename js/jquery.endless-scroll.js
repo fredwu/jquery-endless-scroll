@@ -77,6 +77,8 @@
 
 var EndlessScroll, Whether;
 
+window.EndlessScroll = EndlessScroll;
+
 EndlessScroll = (function() {
   var defaults;
 
@@ -111,8 +113,6 @@ Whether = (function() {
   return Whether;
 
 })();
-
-window.EndlessScroll = EndlessScroll;
 
 (function($) {
   return $.fn.endlessScroll = function(options) {

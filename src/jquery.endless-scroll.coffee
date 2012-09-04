@@ -74,6 +74,8 @@
                                       <scrollDirection> a string of either 'prev' or 'next'
 ###
 
+window.EndlessScroll = EndlessScroll
+
 class EndlessScroll
   defaults =
     topPixels:         50
@@ -93,9 +95,6 @@ class Whether
     $(document).height() - $(window).height() <=
       $(window).scrollTop() + options.bottomPixels
 
-
-
-window.EndlessScroll = EndlessScroll
 
 (($) ->
   $.fn.endlessScroll = (options) ->
