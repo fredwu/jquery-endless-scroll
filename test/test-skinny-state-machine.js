@@ -5,7 +5,7 @@ describe('Skinny Coffee Machine', function() {
     var self;
     self = this;
     this.coffeeMachine = {};
-    this.actionPerformed = false;
+    this.actionPerformed = [];
     this.coffeeMachine.power = new SkinnyCoffeeMachine({
       "default": 'off',
       events: {
@@ -16,12 +16,25 @@ describe('Skinny Coffee Machine', function() {
           on: 'off'
         }
       },
-      actions: {
+      on: {
         turnOn: function(from, to) {
-          return self.actionPerformed = "" + (from.toUpperCase()) + " to " + (to.toUpperCase());
+          return self.actionPerformed.push("" + (from.toUpperCase()) + " to " + (to.toUpperCase()));
         },
         turnOff: function(from, to) {
-          return self.actionPerformed = "" + (from.toUpperCase()) + " to " + (to.toUpperCase());
+          return self.actionPerformed.push("" + (from.toUpperCase()) + " to " + (to.toUpperCase()));
+        }
+      },
+      before: {
+        turnOff: function(from, to) {
+          return self.actionPerformed.push("Before switching to " + (to.toUpperCase()));
+        }
+      },
+      after: {
+        turnOn: function(from, to) {
+          return self.actionPerformed.push("After switching to " + (to.toUpperCase()));
+        },
+        turnOff: function(from, to) {
+          return self.actionPerformed.push("After switching to " + (to.toUpperCase()));
         }
       }
     });
@@ -43,7 +56,10 @@ describe('Skinny Coffee Machine', function() {
       }
     });
   });
-  return describe('States', function() {
+  afterEach(function() {
+    return this.actionPerformed = [];
+  });
+  describe('States', function() {
     it('lists all states', function() {
       this.coffeeMachine.power.allStates().should.eql(['off', 'on']);
       return this.coffeeMachine.mode.allStates().should.eql(['latte', 'cappuccino', 'espresso', 'lungo']);
@@ -62,17 +78,22 @@ describe('Skinny Coffee Machine', function() {
       this.coffeeMachine.mode.change('last');
       return this.coffeeMachine.mode.currentState().should.eql('latte');
     });
-    it('changes state multiple times', function() {
+    return it('changes state multiple times', function() {
       this.coffeeMachine.mode.currentState().should.eql('latte');
       this.coffeeMachine.mode.change('next').change('next').change('next').change('next');
       this.coffeeMachine.mode.currentState().should.eql('latte');
       this.coffeeMachine.mode.change('next', 4);
       return this.coffeeMachine.mode.currentState().should.eql('latte');
     });
+  });
+  return describe('Events', function() {
     return it('performs actions when change the state', function() {
-      this.actionPerformed.should.eql(false);
+      this.actionPerformed.should.eql([]);
       this.coffeeMachine.power["switch"]('turnOn');
-      return this.actionPerformed.should.eql('OFF to ON');
+      this.actionPerformed.should.eql(['OFF to ON', 'After switching to ON']);
+      this.actionPerformed = [];
+      this.coffeeMachine.power["switch"]('turnOff');
+      return this.actionPerformed.should.eql(['Before switching to OFF', 'ON to OFF', 'After switching to OFF']);
     });
   });
 });

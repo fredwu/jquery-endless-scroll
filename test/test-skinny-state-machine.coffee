@@ -3,7 +3,7 @@ describe 'Skinny Coffee Machine', ->
   beforeEach ->
     self             = this
     @coffeeMachine   = {}
-    @actionPerformed = false
+    @actionPerformed = []
 
     @coffeeMachine.power = new SkinnyCoffeeMachine
       default: 'off'
@@ -12,9 +12,14 @@ describe 'Skinny Coffee Machine', ->
           off: 'on'
         turnOff:
           on: 'off'
-      actions:
-        turnOn:  (from, to) -> self.actionPerformed = "#{from.toUpperCase()} to #{to.toUpperCase()}"
-        turnOff: (from, to) -> self.actionPerformed = "#{from.toUpperCase()} to #{to.toUpperCase()}"
+      on:
+        turnOn:  (from, to) -> self.actionPerformed.push "#{from.toUpperCase()} to #{to.toUpperCase()}"
+        turnOff: (from, to) -> self.actionPerformed.push "#{from.toUpperCase()} to #{to.toUpperCase()}"
+      before:
+        turnOff: (from, to) -> self.actionPerformed.push "Before switching to #{to.toUpperCase()}"
+      after:
+        turnOn:  (from, to) -> self.actionPerformed.push "After switching to #{to.toUpperCase()}"
+        turnOff: (from, to) -> self.actionPerformed.push "After switching to #{to.toUpperCase()}"
 
     @coffeeMachine.mode = new SkinnyCoffeeMachine
       default: 'latte'
@@ -29,6 +34,9 @@ describe 'Skinny Coffee Machine', ->
           lungo: 'espresso'
           espresso: 'cappuccino'
           cappuccino: 'latte'
+
+  afterEach ->
+    @actionPerformed = []
 
   describe 'States', ->
 
@@ -58,7 +66,22 @@ describe 'Skinny Coffee Machine', ->
       @coffeeMachine.mode.change('next', 4)
       @coffeeMachine.mode.currentState().should.eql('latte')
 
+  describe 'Events', ->
+
     it 'performs actions when change the state', ->
-      @actionPerformed.should.eql(false)
+      @actionPerformed.should.eql([])
       @coffeeMachine.power.switch('turnOn')
-      @actionPerformed.should.eql('OFF to ON')
+      @actionPerformed.should.eql([
+        'OFF to ON'
+        'After switching to ON'
+      ])
+
+      @actionPerformed = []
+
+      @coffeeMachine.power.switch('turnOff')
+      @actionPerformed.should.eql([
+        'Before switching to OFF'
+        'ON to OFF'
+        'After switching to OFF'
+      ])
+

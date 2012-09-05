@@ -22,6 +22,18 @@ SkinnyCoffeeMachine = (function() {
     this.__currentState = this.defaultState();
   }
 
+  SkinnyCoffeeMachine.prototype.defaultState = function() {
+    return this.states["default"];
+  };
+
+  SkinnyCoffeeMachine.prototype.previousState = function() {
+    return this.__previousState;
+  };
+
+  SkinnyCoffeeMachine.prototype.currentState = function() {
+    return this.__currentState;
+  };
+
   SkinnyCoffeeMachine.prototype.allStates = function() {
     var event, state, _allStates;
     _allStates = [];
@@ -33,18 +45,6 @@ SkinnyCoffeeMachine = (function() {
       }
     }
     return _allStates;
-  };
-
-  SkinnyCoffeeMachine.prototype.defaultState = function() {
-    return this.states["default"];
-  };
-
-  SkinnyCoffeeMachine.prototype.previousState = function() {
-    return this.__previousState;
-  };
-
-  SkinnyCoffeeMachine.prototype.currentState = function() {
-    return this.__currentState;
   };
 
   SkinnyCoffeeMachine.prototype.change = function(event, timesToRepeat) {
@@ -68,13 +68,15 @@ SkinnyCoffeeMachine = (function() {
   SkinnyCoffeeMachine.prototype._switchOnce = function(event) {
     this.__previousState = this.currentState();
     this.__currentState = this.states.events[event][this.previousState()];
-    this._performAction(event);
+    this._callAction('before', event);
+    this._callAction('on', event);
+    this._callAction('after', event);
     return this;
   };
 
-  SkinnyCoffeeMachine.prototype._performAction = function(event) {
-    if (this.states.actions && typeof this.states.actions[event] === 'function') {
-      return this.states.actions[event].call(this, this.previousState(), this.currentState());
+  SkinnyCoffeeMachine.prototype._callAction = function(eventType, event) {
+    if (this.states[eventType] && typeof this.states[eventType][event] === 'function') {
+      return this.states[eventType][event].call(this, this.previousState(), this.currentState());
     }
   };
 

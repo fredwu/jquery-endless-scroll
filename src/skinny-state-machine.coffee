@@ -16,6 +16,10 @@ class SkinnyCoffeeMachine
     @__previousState = null
     @__currentState  = @defaultState()
 
+  defaultState:  -> @states.default
+  previousState: -> @__previousState
+  currentState:  -> @__currentState
+
   allStates: ->
     _allStates = []
 
@@ -23,15 +27,6 @@ class SkinnyCoffeeMachine
       (_allStates.push(state) unless state in _allStates) for state of @states.events[event]
 
     _allStates
-
-  defaultState: ->
-    @states.default
-
-  previousState: ->
-    @__previousState
-
-  currentState: ->
-    @__currentState
 
   change: (event, timesToRepeat = 1) ->
     @switch(event, timesToRepeat)
@@ -45,10 +40,12 @@ class SkinnyCoffeeMachine
     @__previousState = @currentState()
     @__currentState  = @states.events[event][@previousState()]
 
-    @_performAction(event)
+    @_callAction('before', event)
+    @_callAction('on', event)
+    @_callAction('after', event)
 
     this
 
-  _performAction: (event) ->
-    if @states.actions and typeof(@states.actions[event]) is 'function'
-      @states.actions[event].call(this, @previousState(), @currentState())
+  _callAction: (eventType, event) ->
+    if @states[eventType] and typeof(@states[eventType][event]) is 'function'
+      @states[eventType][event].call(this, @previousState(), @currentState())
