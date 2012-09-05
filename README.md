@@ -1,5 +1,7 @@
 # Endless Scroll [![endorse](http://api.coderwall.com/fredwu/endorsecount.png)](http://coderwall.com/fredwu)
 
+#### If you encounter problems with scrolling up, please use the old [1.6.0 release](https://github.com/fredwu/jquery-endless-scroll/zipball/1.6.0). The code base is currently being rewritten on the [2.0-rewrite branch](https://github.com/fredwu/jquery-endless-scroll/tree/2.0-rewrite).
+
 If you don't already know, [endless scrolling](http://www.google.com/search?q=endless+scroll) (or infinite scrolling or pagination) is a popular technique amongst modern websites such as [Google Reader](http://reader.google.com/) and [Live Image Search](http://www.live.com/?scope=images), whereby instead of paging through items using traditional pagination links, the page just keeps loading with new items attached to the end.
 
 Endless Scroll not only helps you build highly customisable infinite scrolling effects, it also offers features not commonly seen. Such features include:
