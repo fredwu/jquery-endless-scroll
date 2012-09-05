@@ -86,7 +86,7 @@ describe('Skinny Coffee Machine', function() {
       return this.coffeeMachine.mode.currentState().should.eql('latte');
     });
   });
-  return describe('Events', function() {
+  describe('Events', function() {
     return it('performs actions when change the state', function() {
       this.actionPerformed.should.eql([]);
       this.coffeeMachine.power["switch"]('turnOn');
@@ -94,6 +94,68 @@ describe('Skinny Coffee Machine', function() {
       this.actionPerformed = [];
       this.coffeeMachine.power["switch"]('turnOff');
       return this.actionPerformed.should.eql(['Before switching to OFF', 'ON to OFF', 'After switching to OFF']);
+    });
+  });
+  return describe('Observers', function() {
+    it('observes before an event', function() {
+      var _this = this;
+      this.coffeeMachine.power.observeBefore('turnOn').start('A', function(from, to) {
+        return _this.actionPerformed.push("Observer A before switching to " + (to.toUpperCase()));
+      });
+      this.coffeeMachine.power.observeBefore('turnOn').start('B', function(from, to) {
+        return _this.actionPerformed.push("Observer B before switching to " + (to.toUpperCase()));
+      });
+      this.coffeeMachine.power["switch"]('turnOn');
+      return this.actionPerformed.should.eql(['Observer A before switching to ON', 'Observer B before switching to ON', 'OFF to ON', 'After switching to ON']);
+    });
+    it('observes on an event', function() {
+      var _this = this;
+      this.coffeeMachine.power.observeBefore('turnOn').start('A', function(from, to) {
+        return _this.actionPerformed.push("Observer A before switching to " + (to.toUpperCase()));
+      });
+      this.coffeeMachine.power.observeOn('turnOn').start('A', function(from, to) {
+        return _this.actionPerformed.push("Observer A on switching to " + (to.toUpperCase()));
+      });
+      this.coffeeMachine.power["switch"]('turnOn');
+      return this.actionPerformed.should.eql(['Observer A before switching to ON', 'OFF to ON', 'Observer A on switching to ON', 'After switching to ON']);
+    });
+    it('observes after an event', function() {
+      var _this = this;
+      this.coffeeMachine.power.observeAfter('turnOn').start('A', function(from, to) {
+        return _this.actionPerformed.push("Observer A after switching to " + (to.toUpperCase()));
+      });
+      this.coffeeMachine.power["switch"]('turnOn');
+      return this.actionPerformed.should.eql(['OFF to ON', 'After switching to ON', 'Observer A after switching to ON']);
+    });
+    it('stops an observer worker', function() {
+      var _this = this;
+      this.coffeeMachine.power.observeBefore('turnOn').start('A', function(from, to) {
+        return _this.actionPerformed.push("Observer A before switching to " + (to.toUpperCase()));
+      });
+      this.coffeeMachine.power.observeBefore('turnOn').start('B', function(from, to) {
+        return _this.actionPerformed.push("Observer B before switching to " + (to.toUpperCase()));
+      });
+      this.coffeeMachine.power.observeAfter('turnOn').start('A', function(from, to) {
+        return _this.actionPerformed.push("Observer A after switching to " + (to.toUpperCase()));
+      });
+      this.coffeeMachine.power["switch"]('turnOn');
+      this.actionPerformed.should.eql(['Observer A before switching to ON', 'Observer B before switching to ON', 'OFF to ON', 'After switching to ON', 'Observer A after switching to ON']);
+      this.coffeeMachine.power.observeBefore('turnOn').stop('A');
+      this.coffeeMachine.power["switch"]('turnOff');
+      this.actionPerformed = [];
+      this.coffeeMachine.power["switch"]('turnOn');
+      return this.actionPerformed.should.eql(['Observer B before switching to ON', 'OFF to ON', 'After switching to ON', 'Observer A after switching to ON']);
+    });
+    return it('prevents duplicated observer workers', function() {
+      var _this = this;
+      this.coffeeMachine.power.observeAfter('turnOn').start('A', function(from, to) {
+        return _this.actionPerformed.push("Observer A after switching to " + (to.toUpperCase()));
+      });
+      this.coffeeMachine.power.observeAfter('turnOn').start('A', function(from, to) {
+        return _this.actionPerformed.push("Observer A (NEW) after switching to " + (to.toUpperCase()));
+      });
+      this.coffeeMachine.power["switch"]('turnOn');
+      return this.actionPerformed.should.eql(['OFF to ON', 'After switching to ON', 'Observer A (NEW) after switching to ON']);
     });
   });
 });

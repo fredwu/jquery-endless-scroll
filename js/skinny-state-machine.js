@@ -9,7 +9,7 @@
  See the test file for usage examples.
 */
 
-var SkinnyCoffeeMachine,
+var SkinnyCoffeeMachine, SkinnyObserver, SkinnyObserverWorker,
   __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
 window.SkinnyCoffeeMachine = SkinnyCoffeeMachine;
@@ -20,6 +20,7 @@ SkinnyCoffeeMachine = (function() {
     this.states = states != null ? states : {};
     this.__previousState = null;
     this.__currentState = this.defaultState();
+    this.observer = new SkinnyObserver(this);
   }
 
   SkinnyCoffeeMachine.prototype.defaultState = function() {
@@ -69,8 +70,11 @@ SkinnyCoffeeMachine = (function() {
     this.__previousState = this.currentState();
     this.__currentState = this.states.events[event][this.previousState()];
     this._callAction('before', event);
+    this.observer.act('before', event);
     this._callAction('on', event);
+    this.observer.act('on', event);
     this._callAction('after', event);
+    this.observer.act('after', event);
     return this;
   };
 
@@ -80,6 +84,73 @@ SkinnyCoffeeMachine = (function() {
     }
   };
 
+  SkinnyCoffeeMachine.prototype.observeBefore = function(event) {
+    return this.observer.observe('before', event);
+  };
+
+  SkinnyCoffeeMachine.prototype.observeOn = function(event) {
+    return this.observer.observe('on', event);
+  };
+
+  SkinnyCoffeeMachine.prototype.observeAfter = function(event) {
+    return this.observer.observe('after', event);
+  };
+
   return SkinnyCoffeeMachine;
+
+})();
+
+SkinnyObserver = (function() {
+
+  function SkinnyObserver(sm) {
+    this.sm = sm;
+    this.observers = {};
+  }
+
+  SkinnyObserver.prototype.act = function(eventType, event) {
+    var callback, label, _ref, _results;
+    if (this.observers[eventType] && this.observers[eventType][event]) {
+      _ref = this.observers[eventType][event];
+      _results = [];
+      for (label in _ref) {
+        callback = _ref[label];
+        _results.push(callback.call(this, this.sm.previousState(), this.sm.currentState()));
+      }
+      return _results;
+    }
+  };
+
+  SkinnyObserver.prototype.observe = function(eventType, event) {
+    return new SkinnyObserverWorker(this, eventType, event);
+  };
+
+  return SkinnyObserver;
+
+})();
+
+SkinnyObserverWorker = (function() {
+
+  function SkinnyObserverWorker(observer, eventType, event) {
+    var _base, _base1, _name, _name1, _ref, _ref1;
+    this.observer = observer;
+    this.eventType = eventType;
+    this.event = event;
+    if ((_ref = (_base = this.observer.observers)[_name = this.eventType]) == null) {
+      _base[_name] = {};
+    }
+    if ((_ref1 = (_base1 = this.observer.observers[this.eventType])[_name1 = this.event]) == null) {
+      _base1[_name1] = {};
+    }
+  }
+
+  SkinnyObserverWorker.prototype.start = function(label, callback) {
+    return this.observer.observers[this.eventType][this.event][label] = callback;
+  };
+
+  SkinnyObserverWorker.prototype.stop = function(label) {
+    return delete this.observer.observers[this.eventType][this.event][label];
+  };
+
+  return SkinnyObserverWorker;
 
 })();

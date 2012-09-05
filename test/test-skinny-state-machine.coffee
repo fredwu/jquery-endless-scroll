@@ -85,3 +85,89 @@ describe 'Skinny Coffee Machine', ->
         'After switching to OFF'
       ])
 
+  describe 'Observers', ->
+
+    it 'observes before an event', ->
+      @coffeeMachine.power.observeBefore('turnOn').start 'A', (from, to) =>
+        @actionPerformed.push "Observer A before switching to #{to.toUpperCase()}"
+
+      @coffeeMachine.power.observeBefore('turnOn').start 'B', (from, to) =>
+        @actionPerformed.push "Observer B before switching to #{to.toUpperCase()}"
+
+      @coffeeMachine.power.switch('turnOn')
+      @actionPerformed.should.eql([
+        'Observer A before switching to ON'
+        'Observer B before switching to ON'
+        'OFF to ON'
+        'After switching to ON'
+      ])
+
+    it 'observes on an event', ->
+      @coffeeMachine.power.observeBefore('turnOn').start 'A', (from, to) =>
+        @actionPerformed.push "Observer A before switching to #{to.toUpperCase()}"
+
+      @coffeeMachine.power.observeOn('turnOn').start 'A', (from, to) =>
+        @actionPerformed.push "Observer A on switching to #{to.toUpperCase()}"
+
+      @coffeeMachine.power.switch('turnOn')
+      @actionPerformed.should.eql([
+        'Observer A before switching to ON'
+        'OFF to ON'
+        'Observer A on switching to ON'
+        'After switching to ON'
+      ])
+
+    it 'observes after an event', ->
+      @coffeeMachine.power.observeAfter('turnOn').start 'A', (from, to) =>
+        @actionPerformed.push "Observer A after switching to #{to.toUpperCase()}"
+
+      @coffeeMachine.power.switch('turnOn')
+      @actionPerformed.should.eql([
+        'OFF to ON'
+        'After switching to ON'
+        'Observer A after switching to ON'
+      ])
+
+    it 'stops an observer worker', ->
+      @coffeeMachine.power.observeBefore('turnOn').start 'A', (from, to) =>
+        @actionPerformed.push "Observer A before switching to #{to.toUpperCase()}"
+
+      @coffeeMachine.power.observeBefore('turnOn').start 'B', (from, to) =>
+        @actionPerformed.push "Observer B before switching to #{to.toUpperCase()}"
+
+      @coffeeMachine.power.observeAfter('turnOn').start 'A', (from, to) =>
+        @actionPerformed.push "Observer A after switching to #{to.toUpperCase()}"
+
+      @coffeeMachine.power.switch('turnOn')
+      @actionPerformed.should.eql([
+        'Observer A before switching to ON'
+        'Observer B before switching to ON'
+        'OFF to ON'
+        'After switching to ON'
+        'Observer A after switching to ON'
+      ])
+
+      @coffeeMachine.power.observeBefore('turnOn').stop('A')
+      @coffeeMachine.power.switch('turnOff')
+      @actionPerformed = []
+      @coffeeMachine.power.switch('turnOn')
+      @actionPerformed.should.eql([
+        'Observer B before switching to ON'
+        'OFF to ON'
+        'After switching to ON'
+        'Observer A after switching to ON'
+      ])
+
+    it 'prevents duplicated observer workers', ->
+      @coffeeMachine.power.observeAfter('turnOn').start 'A', (from, to) =>
+        @actionPerformed.push "Observer A after switching to #{to.toUpperCase()}"
+
+      @coffeeMachine.power.observeAfter('turnOn').start 'A', (from, to) =>
+        @actionPerformed.push "Observer A (NEW) after switching to #{to.toUpperCase()}"
+
+      @coffeeMachine.power.switch('turnOn')
+      @actionPerformed.should.eql([
+        'OFF to ON'
+        'After switching to ON'
+        'Observer A (NEW) after switching to ON'
+      ])
