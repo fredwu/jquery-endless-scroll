@@ -264,7 +264,6 @@ class EndlessScroll
     else
       @fired = false
 
-(($) ->
+do ($ = jQuery) ->
   $.fn.endlessScroll = (options) ->
     new EndlessScroll(this, options).run()
-)(jQuery)
