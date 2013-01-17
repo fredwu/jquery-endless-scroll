@@ -1,0 +1,3 @@
+[submodule "lib/skinny-coffee-machine"]
+	path = lib/skinny-coffee-machine
+	url = git@github.com:fredwu/skinny-coffee-machine.git
