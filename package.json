@@ -1,0 +1,50 @@
+{
+  "name": "jquery-endless-scroll",
+  "version": "2.0.0",
+  "title": "jQuery Endless Scroll",
+  "author": {
+    "name": "Fred Wu",
+    "url": "http://fredwu.me/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/fredwu/jquery-endless-scroll.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fredwu/jquery-endless-scroll/issues"
+  },
+  "licenses": [{
+    "type": "MIT",
+    "url": "http://fredwu.mit-license.org/"
+  }],
+  "description": "Endless/infinite scrolling/pagination.",
+  "keywords": [
+    "endless",
+    "infinite",
+    "scroll"
+  ],
+  "homepage": "https://github.com/fredwu/jquery-endless-scroll",
+  "maintainers": [{
+    "name": "Fred Wu",
+    "url": "http://fredwu.me/"
+  }],
+  "files": [
+    "js/jquery-endless-scroll.js"
+  ],
+  "main": "./js/jquery-endless-scroll.js",
+  "dependencies": {
+    "grunt": ">= 0.3.0"
+  },
+  "devDependencies": {
+    "coffee-script": "1.x",
+    "mocha": "1.x",
+    "grunt": "0.x"
+  },
+  "bundleDependencies": [
+    "grunt-coffee",
+    "grunt-mocha"
+  ],
+  "scripts": {
+    "test": "grunt"
+  }
+}

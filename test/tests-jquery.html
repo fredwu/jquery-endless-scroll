@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <title>Endless Scroll Tests (jQuery)</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="mocha.css" />
+
+    <script src="../js/jquery.min.js"></script>
+    <script src="mocha.js"></script>
+    <script src="chai.js"></script>
+    <script src="jquery.jqstub.js"></script>
+    <script>mocha.setup('bdd')</script>
+    <script src="../node_modules/grunt-mocha/tasks/mocha/mocha-helper.js"></script>
+
+    <script src="../lib/skinny-coffee-machine/skinny-coffee-machine.js"></script>
+    <script src="../js/jquery.endless-scroll.js"></script>
+    <script src="test-jquery-endless-scroll.js"></script>
+
+    <script>
+      $(function() {
+        var should = chai.should()
+        mocha.run();
+      });
+    </script>
+  </head>
+  <body>
+    <div id="mocha"></div>
+  </body>
+</html>

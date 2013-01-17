@@ -96,7 +96,9 @@ class Whether
       $(window).scrollTop() + options.bottomPixels
 
 
+dependencyLib = if typeof Zepto is 'undefined' then jQuery else Zepto
+
 (($) ->
   $.fn.endlessScroll = (options) ->
     new EndlessScroll(this, options).run()
-)(jQuery)
+)(dependencyLib)
