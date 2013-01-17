@@ -1,4 +1,4 @@
-# Endless Scroll [![endorse](http://api.coderwall.com/fredwu/endorsecount.png)](http://coderwall.com/fredwu)
+# Endless Scroll [![endorse](http://api.coderwall.com/fredwu/endorsecount.png)](http://coderwall.com/fredwu) [![Build Status](https://secure.travis-ci.org/fredwu/jquery-endless-scroll.png?branch=2.0-rewrite)](http://travis-ci.org/fredwu/jquery-endless-scroll)
 
 If you don't already know, [endless scrolling](http://www.google.com/search?q=endless+scroll) (or infinite scrolling or pagination) is a popular technique amongst modern websites such as [Google Reader](http://reader.google.com/) and [Live Image Search](http://www.live.com/?scope=images), whereby instead of paging through items using traditional pagination links, the page just keeps loading with new items attached to the end.
 
