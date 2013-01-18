@@ -1,3 +1,6 @@
 [submodule "js/skinny-coffee-machine"]
 	path = js/skinny-coffee-machine
 	url = git://github.com/fredwu/skinny-coffee-machine.git
+[submodule "js/jqstub"]
+	path = js/jqstub
+	url = git://github.com/fredwu/jqstub.git
