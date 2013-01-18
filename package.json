@@ -21,7 +21,8 @@
   "keywords": [
     "endless",
     "infinite",
-    "scroll"
+    "scroll",
+    "pagination"
   ],
   "homepage": "https://github.com/fredwu/jquery-endless-scroll",
   "maintainers": [{
@@ -32,13 +33,10 @@
     "js/jquery-endless-scroll.js"
   ],
   "main": "./js/jquery-endless-scroll.js",
-  "dependencies": {
-    "grunt": ">= 0.3.0"
-  },
   "devDependencies": {
     "coffee-script": "1.x",
     "mocha": "1.x",
-    "grunt": "0.x"
+    "grunt": ">= 0.3.0"
   },
   "bundleDependencies": [
     "grunt-coffee",
