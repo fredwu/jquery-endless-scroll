@@ -164,7 +164,7 @@ EndlessScroll = (function() {
 
   EndlessScroll.prototype.detectTarget = function(scope) {
     this.target = scope;
-    return this.targetId = $(this.target).attr('id');
+    return this.targetId = this.target.get(0).id;
   };
 
   EndlessScroll.prototype.detectScrollDirection = function() {
