@@ -154,10 +154,10 @@ EndlessScroll = (function() {
   EndlessScroll.prototype.setInsertPositionsWhenNecessary = function() {
     var container;
     container = "" + this.target.selector + " div.endless_scroll_inner_wrap";
-    if (defaults.insertBefore === null) {
+    if (this.options.insertBefore === null) {
       this.options.insertBefore = "" + container + " div:first";
     }
-    if (defaults.insertAfter === null) {
+    if (this.options.insertAfter === null) {
       return this.options.insertAfter = "" + container + " div:last";
     }
   };
