@@ -1,4 +1,5 @@
 # Endless Scroll [![endorse](http://api.coderwall.com/fredwu/endorsecount.png)](http://coderwall.com/fredwu)
+[![CDNJS version](https://img.shields.io/cdnjs/v/jquery-endless-scroll.svg)](https://cdnjs.com/libraries/jquery-endless-scroll)
 
 #### If you encounter problems with scrolling up, please use the old [1.6.0 release](https://github.com/fredwu/jquery-endless-scroll/zipball/1.6.0). The code base is currently being rewritten on the [2.0-rewrite branch](https://github.com/fredwu/jquery-endless-scroll/tree/2.0-rewrite).
 
